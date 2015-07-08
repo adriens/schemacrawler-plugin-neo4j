@@ -1,16 +1,23 @@
 package nc.adriens.schemacrawler.plugin.neo4j;
 /*
-http://www.tutorialspoint.com/neo4j/neo4j_native_java_api_example.htm
-http://www.sportsstandards.org/oc
+ http://www.tutorialspoint.com/neo4j/neo4j_native_java_api_example.htm
+ http://www.sportsstandards.org/oc
 
-Search nodes :
+ Search nodes :
 
-http://stackoverflow.com/questions/15368579/select-a-node-by-name-in-neo4j-in-java
+ http://stackoverflow.com/questions/15368579/select-a-node-by-name-in-neo4j-in-java
 
  schemacrawler -host=localhost -port=5432 -database=sportsdb -user=sc -password=sc  -schemas=public -c=neo4j -infolevel=maximum -server=postgresql -loglevel=CONFIG -outputDir=c:/tmp
 
+schemacrawler -host=localhost -port=5432 -database=sportsdb -user=sports_adm -password=user_adm  -schemas=sports_adm -c=neo4j -infolevel=maximum -server=postgresql -loglevel=CONFIG -outputDir=./neo4j
+
+MATCH (n)
+RETURN n;
+
 MATCH (a)-[r:CONTAINS_SCHEMA]->(b)
-RETURN r
+ RETURN r
+
+
  */
 
 import java.io.File;
@@ -58,9 +65,36 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                 schemaNode.setProperty("FullName", schema.getFullName());
                 schemaNode.setProperty("LookupKey", schema.getLookupKey());
                 schemaNode.setProperty("Remarks", schema.getRemarks());
-                
+
             }
             tx.success();
+        }
+    }
+
+    public void feedTables(final Catalog catalog) {
+        try (Transaction tx = getDbService().beginTx()) {
+            for (final Schema schema : catalog.getSchemas()) {
+                for (final Table table : catalog.getTables(schema)) {
+                    Node tableNode = dbService.createNode(DatabaseNodeType.TABLE);
+                    tableNode.setProperty("nbColumns", table.getColumns().size());
+                    tableNode.setProperty("definition", table.getDefinition());
+                    tableNode.setProperty("lookupKey", table.getLookupKey());
+                    tableNode.setProperty("name", table.getName());
+                    tableNode.setProperty("remarks", table.getRemarks());
+                    tableNode.setProperty("schemaName", table.getSchema().getName());
+                    tableNode.setProperty("schemaFullname", table.getSchema().getFullName());
+                    tableNode.setProperty("tableType", table.getTableType().toString());
+                    
+                    //writer.println("o--> " + table);
+                    for (final Column column : table.getColumns()) {
+                        Node columnNode = dbService.createNode(DatabaseNodeType.TABLE_COLUMN);
+                        columnNode.setProperty("OrdinalPosition", column.getOrdinalPosition());
+                        //writer.println("     o--> " + column);
+                    }
+
+                }
+                tx.success();
+            }
         }
     }
 
