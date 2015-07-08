@@ -29,6 +29,7 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Column;
@@ -90,6 +91,7 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                         Node columnNode = dbService.createNode(DatabaseNodeType.TABLE_COLUMN);
                         columnNode.setProperty("OrdinalPosition", column.getOrdinalPosition());
                         //writer.println("     o--> " + column);
+                        Relationship relationship = columnNode.createRelationshipTo(tableNode, SchemaRelationShips.IS_COLUMN_OF_TABLE);
                     }
 
                 }
