@@ -9,8 +9,9 @@ package nc.adriens.schemacrawler.plugin.neo4j;
 
  schemacrawler -host=localhost -port=5432 -database=sportsdb -user=sports_adm -password=user_adm  -schemas=sports_adm -c=neo4j -infolevel=maximum -server=postgresql -loglevel=CONFIG
 
- MATCH (n)
- RETURN n;
+
+Cypher query to get all nodes in the browser :
+MATCH (n) RETURN n
 
  MATCH (a)-[r:CONTAINS_SCHEMA]->(b)
  RETURN r
