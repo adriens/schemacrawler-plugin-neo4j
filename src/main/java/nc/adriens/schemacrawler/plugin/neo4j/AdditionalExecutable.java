@@ -61,6 +61,7 @@ public class AdditionalExecutable extends BaseStagedExecutable {
     public void feedTables(final Catalog catalog) throws IOException {
         String lCypher = "";
         String lFullTablename = "";
+        String lFullColumnName = "";
         for (final Schema schema : catalog.getSchemas()) {
             for (final Table table : catalog.getTables(schema)) {
                 //cypherWriter.write("CREATE (" + schema +":SCHEMA{fullName:'" + schema.getFullName() + "', lookupKey:'" + schema.getLookupKey()+ "', name:'" + schema.getName() + "', remarks:'" + schema.getRemarks() + "'})\n");
@@ -102,10 +103,25 @@ public class AdditionalExecutable extends BaseStagedExecutable {
 
                 //writer.println("o--> " + table);
                 for (final Column column : table.getColumns()) {
-                        //Node columnNode = dbService.createNode(DatabaseNodeType.TABLE_COLUMN);
-                    //columnNode.setProperty("OrdinalPosition", column.getOrdinalPosition());
-                    //writer.println("     o--> " + column);
-                    //Relationship relationship = columnNode.createRelationshipTo(tableNode, SchemaRelationShips.IS_COLUMN_OF_TABLE);
+                    lFullColumnName = column.getFullName().replace(".", "_");
+                    lFullColumnName = lFullColumnName.replace("\"", "");
+                    System.out.println("Putting column nodes of <" + table.getFullName() + "> table...");
+                    // Create the node
+                    lCypher = "CREATE ( " + lFullColumnName + ":COLUMN{name:'" + column.getName() + "', fullParentTableName:'" + lFullTablename + "'})\n";
+                    //lCypher += "RETURN p\n";
+                    cypherWriter.write(lCypher);
+                    cypherWriter.flush();
+                    // colum created.
+                    // Create the relation bewteen column and parent table
+                    //lCypher = "\n\nWITH " + lFullColumnName + ", " + lFullTablename + "\n";
+                    //lCypher +="\n\n\nMATCH (a:TABLE),(b:COLUMN)\n";
+                    //lCypher += "WHERE a.fullTableName = '" + lFullTablename + "' and b.fullParentTableName = '" + lFullTablename + "'\n";
+                    //lCypher += "CREATE (a)-[r:IS_COLUMN_OF { name : a.fullTableName + '<->' + b.fullParentTableName}]->(b)\n";
+                    //lCypher += "CREATE (b)-[r:IS_COLUMN_OF { name : a.fullTableName + '<->' + b.fullParentTableName}]->(a)\n\n";
+                    //lCypher += "RETURN r\n";
+                    //cypherWriter.write(lCypher);
+                    //cypherWriter.flush();
+                    
                 }
 
             }
@@ -121,7 +137,7 @@ public class AdditionalExecutable extends BaseStagedExecutable {
             init();
             feedSchemas(catalog);
             feedTables(catalog);
-            cypherWriter.write("MATCH (n) RETURN n\n");
+            //cypherWriter.write("MATCH (n) RETURN n\n");
             cypherWriter.flush();
             cypherWriter.close();
 
