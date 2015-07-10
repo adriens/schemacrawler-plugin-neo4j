@@ -2,15 +2,15 @@
 
 ## Description
 
-This is a [schemacrawler](http://schemacrawler.sourceforge.net/ "Schemacrawler Homepage") [plugin](http://schemacrawler.sourceforge.net/plugins.html "Schemacrawler plugins homepage") that dumps database structure (also called schema) into a [neo4j](http://neo4j.com/ "Neo4j homepage") database. Once this done, you can view it in neo4j web console, perform CYPHER queries on it and hence allows you to report your database schema the way you want.
+This is a [schemacrawler](http://schemacrawler.sourceforge.net/ "Schemacrawler Homepage") [plugin](http://schemacrawler.sourceforge.net/plugins.html "Schemacrawler plugins homepage") that dumps database structure (also called schema) into a [neo4j](http://neo4j.com/ "Neo4j homepage") database. Once this done, you can view it in [neo4j web console](http://neo4j.com/developer/guide-data-visualization/#_product_keylines_neo4j_graph_visualization "Neo4j visualization"), perform [CYPHER](http://neo4j.com/developer/cypher-query-language/#_about_cypher "About CYPHER") queries on it and hence allows you to report your database schema the way you want.
 
 <a href="https://vimeo.com/97204829" target="_blank"><img src="http://dev.assets.neo4j.com.s3.amazonaws.com/wp-content/uploads/2014/08/VLBCcWS-u6EcWuGxslN9UxCJWIiMNFR5Kv0vFnVqz3KVyvih5n3LF3RgEWpT99V6oTzlpnlvzroac8viV2gm4mOWgvw5IP8HiyZfCbx498ZgEQBX9XgqFumV.png?_ga=1.151612667.310337467.1434158905" 
 alt="Screenshot" border="10" /></a>
 
 
-You can see these features as an addon not native schemacrawler features.
+You can see these features as an addon to native schemacrawler features.
 
-## Why ?
+## Why spending time developing this software ?
 
 Because i find it fun to design a graph database schema to modelize a database schema ;-p
 
@@ -26,6 +26,12 @@ For now this plugin is its very early stages as i use this project to :
 
 ## Build the plugin
 
+As this is a standard maven projet, just :
+
+1. Clone this git repo
+2. Jump in the project directory
+3. `mvn clean package`
+4. Get the `jar` in the `target` directory
 
 ## Schemacrawler requirements
 
@@ -38,7 +44,7 @@ To create your neo4j database for your database schema, you need :
 
 ## Neo4j requirements
 
-Follow neo4j install instructions. In the following sections, i will assume you are runnning neo4j on linux as it's easier to document, but things are exactly the same.
+Follow neo4j [install instructions](http://neo4j.com/docs/stable/server-installation.html "Neo4j install instructions"). In the following sections, i will assume you are runnning neo4j on linux as it's easier to document, but things are exactly the same.
 
 Choose an **empty and dedicated* directoty that will contain the generated datasbe : BEWARE AS DURING DATABASE CREATION THIS DIRECTORY WILL BE DELETED BY THE PLUGIN !**
 
