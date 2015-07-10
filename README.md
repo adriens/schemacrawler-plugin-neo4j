@@ -35,7 +35,7 @@ To create your neo4j database for your database schema, you need :
 
 Follow neo4j install instructions. In the following sections, i will assume you are runnning neo4j on linux as it's easier to document, but things are exactly the same.
 
-Choose an **empty and dedicated* directoty that will contain the generated datasbe : BEWARE AS DURING DATABASE CREATION THIS DIRECTORY WILL BE DELETED BU THE PLUGIN !**
+Choose an **empty and dedicated* directoty that will contain the generated datasbe : BEWARE AS DURING DATABASE CREATION THIS DIRECTORY WILL BE DELETED BY THE PLUGIN !**
 
 # Generate the neo4j graph database !
 
