@@ -2,7 +2,7 @@
 
 ## Description
 
-This is a schemacrawler plugin that dumps database structure (also called schema) into a neo4j database. Once this done, you can view it in neo4j web console, perform CYPHER queries on it and hence allows you to report your database schema the way you want.
+This is a [schemacrawler](http://schemacrawler.sourceforge.net/ "Schemacrawler Homepage") [plugin](http://schemacrawler.sourceforge.net/plugins.html "Schemacrawler plugins homepage") that dumps database structure (also called schema) into a neo4j database. Once this done, you can view it in neo4j web console, perform CYPHER queries on it and hence allows you to report your database schema the way you want.
 You can see these features as an addon not native schemacrawler features.
 
 ## Why ?
