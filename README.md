@@ -41,9 +41,10 @@ Choose an *empty and dedicated* directoty that will contain the generated datasb
 
 **Let's assume your neo4j graph database directory is `~/neo4j.`**
 
-1. Run the schemacrawler command
+1. Run the schemacrawler command :
+
 `schemacrawler -host=localhost -port=5432 -database=sportsdb -user=sports_adm -password=user_adm  -schemas=public -c=neo4j -infolevel=maximum -server=postgresql -loglevel=CONFIG -outputDir=./neo4j`
-2. Start neo4j server
+2. Start neo4j server :
 `cd ~/apps/neo4j-community-2.3.0-M02 && ./bin/neo4j start`
 3. Go to neo4j webapp (http://localhost:7474) and take a look at your graph database schema
 
