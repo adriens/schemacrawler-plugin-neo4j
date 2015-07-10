@@ -9,7 +9,7 @@ import org.neo4j.graphdb.RelationshipType;
 
 /**
  *
- * @author salad74
+ * @author adriens
  */
 public enum SchemaRelationShips implements RelationshipType {
     IS_COLUMN_OF_TABLE

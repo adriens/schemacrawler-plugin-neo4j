@@ -9,7 +9,7 @@ import org.neo4j.graphdb.Label;
 
 /**
  *
- * @author salad74
+ * @author adriens
  */
 public enum DatabaseNodeType implements Label{
     SCHEMA, TABLE, TABLE_COLUMN
