@@ -65,7 +65,7 @@ Choose an **empty and dedicated* directoty that will contain the generated datas
 Go to neo4j webapp (http://localhost:7474) and take a look at your graph database schema
 
 
-# Dirty dev scripts
+# (Dirty) dev scripts
 
 
 ##  Start neo4j server :
