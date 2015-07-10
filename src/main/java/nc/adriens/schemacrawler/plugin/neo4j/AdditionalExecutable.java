@@ -7,23 +7,29 @@ package nc.adriens.schemacrawler.plugin.neo4j;
 
  http://stackoverflow.com/questions/15368579/select-a-node-by-name-in-neo4j-in-java
 
- schemacrawler -host=localhost -port=5432 -database=sportsdb -user=sports_adm -password=user_adm  -schemas=sports_adm -c=neo4j -infolevel=maximum -server=postgresql -loglevel=CONFIG
+ schemacrawler -host=localhost -port=5432 -database=sportsdb -user=sc -password=sc  -schemas=public -c=neo4j -infolevel=maximum -server=postgresql -loglevel=CONFIG -outputDir=c:/tmp
 
+schemacrawler -host=localhost -port=5432 -database=sportsdb -user=sports_adm -password=user_adm  -schemas=public -c=neo4j -infolevel=maximum -server=postgresql -loglevel=CONFIG -outputDir=./neo4j
 
-Cypher query to get all nodes in the browser :
-MATCH (n) RETURN n
+MATCH (n)
+RETURN n;
 
- MATCH (a)-[r:CONTAINS_SCHEMA]->(b)
+MATCH (a)-[r:CONTAINS_SCHEMA]->(b)
  RETURN r
 
 
  */
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import org.apache.commons.io.FileUtils;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Column;
@@ -35,115 +41,62 @@ public class AdditionalExecutable extends BaseStagedExecutable {
 
     static final String COMMAND = "neo4j";
 
-    private String outputFilename;
-    private FileWriter cypherWriter;
+    private String outputDir;
+    private GraphDatabaseFactory dbFactory;
+    private GraphDatabaseService dbService;
 
     protected AdditionalExecutable() {
         super(COMMAND);
     }
 
-    public static final String normalizeString(String theString){
-        String out;
-        if(theString != null){
-            out = theString;
-            out = out.replace(".", "_");
-            out = out.replace("\"", "");
-            return out;
-        }
-        else{
-            return null;
-        }
-    }
     public void init() throws IOException {
         // recursively delete directory contents
-        System.out.println("Output cypher file : <" + getOutputFilename() + "> ...");
-        File cypherFile = new File(getOutputFilename());
-        cypherWriter = new FileWriter(cypherFile.getAbsoluteFile());
-        cypherWriter.write("// Schemacrawler neo4j cyphe commands\n");
-        cypherWriter.flush();
+        System.out.println("Deleting directory <" + getOutputDir() + "> ...");
+        FileUtils.deleteDirectory(new File(getOutputDir()));
+        System.out.println("Output directory cleaned");
+        setDbFactory(new GraphDatabaseFactory());
+        setDbService(dbFactory.newEmbeddedDatabase(getOutputDir()));
     }
 
-    public void feedSchemas(final Catalog catalog) throws IOException {
-        for (final Schema schema : catalog.getSchemas()) {
-            System.out.println("Processing schema <" + schema.getName() + ">");
-            cypherWriter.write("CREATE (" + schema + ":SCHEMA{fullName:'" + schema.getFullName() + "', lookupKey:'" + schema.getLookupKey() + "', name:'" + schema.getName() + "', remarks:'" + schema.getRemarks() + "'})\n");
-            cypherWriter.flush();
+    public void feedSchemas(final Catalog catalog) {
+        try (Transaction tx = getDbService().beginTx()) {
+            for (final Schema schema : catalog.getSchemas()) {
+                Node schemaNode = dbService.createNode(DatabaseNodeType.SCHEMA);
+                schemaNode.setProperty("Name", schema.getName());
+                schemaNode.setProperty("FullName", schema.getFullName());
+                schemaNode.setProperty("LookupKey", schema.getLookupKey());
+                schemaNode.setProperty("Remarks", schema.getRemarks());
+
+            }
+            tx.success();
         }
     }
 
-    public void feedTables(final Catalog catalog) throws IOException {
-        String lCypher = "";
-        String lFullTablename = "";
-        String lFullColumnName = "";
-        for (final Schema schema : catalog.getSchemas()) {
-            for (final Table table : catalog.getTables(schema)) {
-                //cypherWriter.write("CREATE (" + schema +":SCHEMA{fullName:'" + schema.getFullName() + "', lookupKey:'" + schema.getLookupKey()+ "', name:'" + schema.getName() + "', remarks:'" + schema.getRemarks() + "'})\n");
-                System.out.println("Processing table <" + table.getName() + ">");
-                lFullTablename = normalizeString(table.getFullName());
-                lCypher = "// Creating table node for <" + table.getFullName()+ ">\n";
-                lCypher += "CREATE (" + lFullTablename + ":TABLE{";
-                lCypher += "fullTableName:'" + lFullTablename + "'";
-                lCypher += ", nbColumns:" + table.getColumns().size();
-                if (lCypher != null) {
-                    if (lCypher.length() > 0) {
-                        lCypher += ", definition:'" + table.getDefinition() + "'";
-                    }
-                }
-
-                if (table.getLookupKey() != null) {
-                    if (table.getLookupKey().length() > 0) {
-                        lCypher += ", lookupKey:'" + table.getLookupKey() + "'";
-                    }
-                }
-
-                lCypher += ", tableName:'" + table.getName() + "'";
-
-                if (table.getRemarks() != null) {
-                    if (table.getRemarks().length() > 0) {
-                        lCypher += ", remarks:'" + table.getRemarks() + "'";
-                    }
-                }
-
-                lCypher += ", schemaName:'" + table.getSchema().getName() + "'";
-                lCypher += ", schemaFullName:'" + table.getSchema().getFullName() + "'";
-                lCypher += ", tableType:'" + table.getTableType().toString() + "'";
-                
-                
-                    // tableType:'" + table.getTableType().toString() + "'}");
-                lCypher += "})\n";
-                cypherWriter.write(lCypher);
-                //cypherWriter.write("CREATE (" + table.getFullName() + ":TABLE{nbColumns:" + table.getColumns().size() + ", definition:'" + table.getDefinition()+ "', lookupKey:'" + table.getLookupKey() + "', name:'" + table.getName() + "', remarks:'" + table.getRemarks() + "', schemaname:'" + table.getSchema().getName() + "', schemaFullName:'" + table.getSchema().getFullName() + "', tableType:'" + table.getTableType().toString() + "'}");
-                cypherWriter.flush();
-
-                //writer.println("o--> " + table);
-                for (final Column column : table.getColumns()) {
-                    lFullColumnName = column.getFullName().replace(".", "_");
-                    lFullColumnName = lFullColumnName.replace("\"", "");
-                    System.out.println("Putting column nodes of <" + table.getFullName() + "> table...");
-                    // Create the node
+    public void feedTables(final Catalog catalog) {
+        try (Transaction tx = getDbService().beginTx()) {
+            for (final Schema schema : catalog.getSchemas()) {
+                for (final Table table : catalog.getTables(schema)) {
+                    Node tableNode = dbService.createNode(DatabaseNodeType.TABLE);
+                    tableNode.setProperty("nbColumns", table.getColumns().size());
+                    tableNode.setProperty("definition", table.getDefinition());
+                    tableNode.setProperty("lookupKey", table.getLookupKey());
+                    tableNode.setProperty("name", table.getName());
+                    tableNode.setProperty("remarks", table.getRemarks());
+                    tableNode.setProperty("schemaName", table.getSchema().getName());
+                    tableNode.setProperty("schemaFullname", table.getSchema().getFullName());
+                    tableNode.setProperty("tableType", table.getTableType().toString());
                     
-                    lCypher = "// Creating column <" + lFullColumnName + "> for table <" + lFullTablename +">\n";
-                    lCypher += "CREATE (" + lFullColumnName + ":COLUMN{fullColumnName:'" + lFullColumnName + "', fullParentTableName:'" + lFullTablename + "'})\n";
-                    //lCypher += "RETURN p\n";
-                    cypherWriter.write(lCypher);
-                    //cypherWriter.flush();
-                    // colum created.
-                    // Create the relation bewteen column and parent table
-                    //lCypher = "\n\nWITH " + lFullColumnName + ", " + lFullTablename + "\n";
-                    lCypher = "//Creating match\n";
-                    lCypher += "WITH " + lFullTablename + ", " + lFullColumnName + "\n";
-                    lCypher +="MATCH (a:TABLE),(b:COLUMN)\n";
-                    lCypher += "WHERE a.fullTableName = '" + lFullTablename + "' and b.fullParentTableName = '" + lFullTablename + "' AND b.fullColumnName = '" + lFullColumnName+ "'\n";
-                    //lCypher += "CREATE (b)-[r:IS_COLUMN_OF { name : b.fullColumnName + '<->' + b.fullTableName }]->(a)\n";
-                    lCypher += "CREATE (b)-[r:IS_COLUMN_OF { name : a.fullTableName + '<->' + b.fullParentTableName}]->(a)\n\n\n";
+                    //writer.println("o--> " + table);
+                    for (final Column column : table.getColumns()) {
+                        Node columnNode = dbService.createNode(DatabaseNodeType.TABLE_COLUMN);
+                        columnNode.setProperty("OrdinalPosition", column.getOrdinalPosition());
+                        //writer.println("     o--> " + column);
+                        Relationship relationship = columnNode.createRelationshipTo(tableNode, SchemaRelationShips.IS_COLUMN_OF_TABLE);
+                    }
 
-                    cypherWriter.write(lCypher);
-                    cypherWriter.flush();
-                    
                 }
-
+                tx.success();
             }
-
         }
     }
 
@@ -151,43 +104,65 @@ public class AdditionalExecutable extends BaseStagedExecutable {
     public void executeOn(final Catalog catalog, final Connection connection)
             throws Exception {
         try (final PrintWriter writer = new PrintWriter(outputOptions.openNewOutputWriter());) {
-            setOutputFilename(additionalConfiguration.getStringValue("outputFilename", "neo4j.cypher"));
+            setOutputDir(additionalConfiguration.getStringValue("outputDir", "neo4j"));
             init();
             feedSchemas(catalog);
             feedTables(catalog);
-            //cypherWriter.write("MATCH (n) RETURN n\n");
-            cypherWriter.flush();
-            cypherWriter.close();
 
+            for (final Schema schema : catalog.getSchemas()) {
+//        System.out.println(schema);
+//        for (final Table table: catalog.getTables(schema))
+//        {
+//          writer.println("o--> " + table);
+//          for (final Column column: table.getColumns())
+//          {
+//            writer.println("     o--> " + column);
+//          }
+                //}
+            }
         }
     }
 
     /**
-     * @return the outputFilename
+     * @return the outputDir
      */
-    public String getOutputFilename() {
-        return outputFilename;
+    public String getOutputDir() {
+        return outputDir;
     }
 
     /**
-     * @param outputFilename the outputFilename to set
+     * @param outputDir the outputDir to set
      */
-    public void setOutputFilename(String outputFilename) {
-        this.outputFilename = outputFilename;
+    public void setOutputDir(String outputDir) {
+        this.outputDir = outputDir;
     }
 
     /**
-     * @return the cypherWriter
+     * @return the dbFactory
      */
-    public FileWriter getCypherWriter() {
-        return cypherWriter;
+    public GraphDatabaseFactory getDbFactory() {
+        return dbFactory;
     }
 
     /**
-     * @param cypherWriter the cypherWriter to set
+     * @param dbFactory the dbFactory to set
      */
-    public void setCypherWriter(FileWriter cypherWriter) {
-        this.cypherWriter = cypherWriter;
+    public void setDbFactory(GraphDatabaseFactory dbFactory) {
+        this.dbFactory = dbFactory;
+    }
+
+    /**
+     * @return the dbService
+     */
+    public GraphDatabaseService getDbService() {
+        return dbService;
+    }
+
+    /**
+     * @param dbService the dbService to set
+     */
+    public void setDbService(GraphDatabaseService dbService) {
+        this.dbService = dbService;
     }
 
 }
