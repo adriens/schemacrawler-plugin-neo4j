@@ -37,6 +37,10 @@ import schemacrawler.schema.Schema;
 import schemacrawler.schema.Table;
 import schemacrawler.tools.executable.BaseStagedExecutable;
 
+/**
+ *
+ * @author adriens
+ */
 public class AdditionalExecutable extends BaseStagedExecutable {
 
     static final String COMMAND = "neo4j";
@@ -106,6 +110,7 @@ public class AdditionalExecutable extends BaseStagedExecutable {
         try (final PrintWriter writer = new PrintWriter(outputOptions.openNewOutputWriter());) {
             setOutputDir(additionalConfiguration.getStringValue("outputDir", "neo4j"));
             init();
+            //TODO implement relation between schema and tables (table BELONGS_TO_SCHEMA)
             feedSchemas(catalog);
             feedTables(catalog);
 
