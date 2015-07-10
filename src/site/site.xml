@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="schemacrawler-plugin-neo4j">
+    <poweredBy>  
+        <logo name="Maven" href="http://maven.apache.org/" img="http://maven.apache.org/images/logos/maven-button-1.png" />
+        <!--<logo name="Support SchemaCrawler" href="http://sourceforge.net/p/schemacrawler/donate/" img="http://images.sourceforge.net/images/project-support.jpg" />-->
+    </poweredBy>
+    
+    <bannerLeft>
+        <name>Schemacrawler Neo4j plugin</name>
+        <!--<src>https://c.fsdn.com/allura/p/schemacrawler/icon</src>-->
+        <href>https://github.com/adriens/schemacrawler-plugin-neo4j</href>
+    </bannerLeft>
+    <!--
+          <bannerRight>
+      <name>SourceForge</name>
+      <src>
+        <![CDATA[http://sourceforge.net/sflogo.php?group_id=148383&type=5]]>
+      </src>
+    </bannerRight>
+    -->
+    <skin>
+        <groupId>lt.velykis.maven.skins</groupId>
+        <artifactId>reflow-maven-skin</artifactId>
+        <version>1.1.1</version>
+    </skin>
+    <body>
+        <links>
+            <!-- Schemacrawler links -->
+            <item name="Schemacrawler homepage" href="http://schemacrawler.sourceforge.net/" />
+            <item name="Download Schemacrawler" href="http://sourceforge.net/projects/schemacrawler/files/"/>
+        </links>
+
+        <!--<menu name="Schemacrawler Neo4j plugin">
+    <item name="Introduction" href="schemacrawler-debian-faq.html"/>
+    <item name="Acknowledgements" href="acknowledgements.html"/>
+</menu>
+        -->
+        <menu ref="reports"/>
+        <footer>All rights reserved.</footer>
+    </body>
+</project>
