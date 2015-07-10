@@ -80,3 +80,9 @@ Go to neo4j webapp (http://localhost:7474) and take a look at your graph databas
 
 `cd ~/tmp
 sudo cp ~/NetBeansProjects/schemacrawler-plugin-neo4j/target/schemacrawler-plugin-neo4j-1.0-SNAPSHOT.jar /opt/schemacrawler/lib/ && schemacrawler -host=localhost -port=5432 -database=sportsdb -user=sports_adm -password=user_adm  -schemas=public -c=neo4j -infolevel=maximum -server=postgresql -loglevel=CONFIG -outputDir=./neo4j`
+
+# Acknowledgements
+
+I want to thank my dear girlfriend for her patience when i develop software on the couch while she's watching and for supporting and listening to my enthousiatics thoughts about development, free software, ... and so many other tech things...
+
+I also want to thank [Sualeh Fatehi](https://github.com/sualeh "Sualeh Fatehi") for his very kind help and support on Schemacrawler, and for always answering questions very fast... and of course for his great software with which i can make so many cool things !
