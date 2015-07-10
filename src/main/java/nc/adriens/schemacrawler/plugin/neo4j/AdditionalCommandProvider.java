@@ -6,6 +6,10 @@ import schemacrawler.tools.executable.CommandProvider;
 import schemacrawler.tools.executable.Executable;
 import schemacrawler.tools.options.OutputOptions;
 
+/**
+ *
+ * @author adriens
+ */
 public class AdditionalCommandProvider
   implements CommandProvider
 {
