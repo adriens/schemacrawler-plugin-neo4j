@@ -42,6 +42,18 @@ public class AdditionalExecutable extends BaseStagedExecutable {
         super(COMMAND);
     }
 
+    public static final String normalizeString(String theString){
+        String out;
+        if(theString != null){
+            out = theString;
+            out = out.replace(".", "_");
+            out = out.replace("\"", "");
+            return out;
+        }
+        else{
+            return null;
+        }
+    }
     public void init() throws IOException {
         // recursively delete directory contents
         System.out.println("Output cypher file : <" + getOutputFilename() + "> ...");
@@ -67,8 +79,9 @@ public class AdditionalExecutable extends BaseStagedExecutable {
             for (final Table table : catalog.getTables(schema)) {
                 //cypherWriter.write("CREATE (" + schema +":SCHEMA{fullName:'" + schema.getFullName() + "', lookupKey:'" + schema.getLookupKey()+ "', name:'" + schema.getName() + "', remarks:'" + schema.getRemarks() + "'})\n");
                 System.out.println("Processing table <" + table.getName() + ">");
-                lFullTablename = table.getFullName().replace(".", "_");
-                lCypher = "CREATE (" + lFullTablename + ":TABLE{";
+                lFullTablename = normalizeString(table.getFullName());
+                lCypher = "// Creating table node for <" + table.getFullName()+ ">\n";
+                lCypher += "CREATE (" + lFullTablename + ":TABLE{";
                 lCypher += "fullTableName:'" + lFullTablename + "'";
                 lCypher += ", nbColumns:" + table.getColumns().size();
                 if (lCypher != null) {
@@ -108,20 +121,24 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                     lFullColumnName = lFullColumnName.replace("\"", "");
                     System.out.println("Putting column nodes of <" + table.getFullName() + "> table...");
                     // Create the node
-                    lCypher = "CREATE ( " + lFullColumnName + ":COLUMN{name:'" + column.getName() + "', fullParentTableName:'" + lFullTablename + "'})\n";
+                    
+                    lCypher = "// Creating column <" + lFullColumnName + "> for table <" + lFullTablename +">\n";
+                    lCypher += "CREATE (" + lFullColumnName + ":COLUMN{fullColumnName:'" + lFullColumnName + "', fullParentTableName:'" + lFullTablename + "'})\n";
                     //lCypher += "RETURN p\n";
                     cypherWriter.write(lCypher);
-                    cypherWriter.flush();
+                    //cypherWriter.flush();
                     // colum created.
                     // Create the relation bewteen column and parent table
                     //lCypher = "\n\nWITH " + lFullColumnName + ", " + lFullTablename + "\n";
-                    //lCypher +="\n\n\nMATCH (a:TABLE),(b:COLUMN)\n";
-                    //lCypher += "WHERE a.fullTableName = '" + lFullTablename + "' and b.fullParentTableName = '" + lFullTablename + "'\n";
-                    //lCypher += "CREATE (a)-[r:IS_COLUMN_OF { name : a.fullTableName + '<->' + b.fullParentTableName}]->(b)\n";
-                    //lCypher += "CREATE (b)-[r:IS_COLUMN_OF { name : a.fullTableName + '<->' + b.fullParentTableName}]->(a)\n\n";
-                    //lCypher += "RETURN r\n";
-                    //cypherWriter.write(lCypher);
-                    //cypherWriter.flush();
+                    lCypher = "//Creating match\n";
+                    lCypher += "WITH " + lFullTablename + ", " + lFullColumnName + "\n";
+                    lCypher +="MATCH (a:TABLE),(b:COLUMN)\n";
+                    lCypher += "WHERE a.fullTableName = '" + lFullTablename + "' and b.fullParentTableName = '" + lFullTablename + "' AND b.fullColumnName = '" + lFullColumnName+ "'\n";
+                    //lCypher += "CREATE (b)-[r:IS_COLUMN_OF { name : b.fullColumnName + '<->' + b.fullTableName }]->(a)\n";
+                    lCypher += "CREATE (b)-[r:IS_COLUMN_OF { name : a.fullTableName + '<->' + b.fullParentTableName}]->(a)\n\n\n";
+
+                    cypherWriter.write(lCypher);
+                    cypherWriter.flush();
                     
                 }
 
