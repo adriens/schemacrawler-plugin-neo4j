@@ -44,7 +44,9 @@ To create your neo4j database for your database schema, you need :
 
 ## Neo4j requirements
 
-Follow neo4j [install instructions](http://neo4j.com/docs/stable/server-installation.html "Neo4j install instructions"). In the following sections, i will assume you are runnning neo4j on linux as it's easier to document, but things are exactly the same.
+Follow neo4j [install instructions](http://neo4j.com/docs/stable/server-installation.html "Neo4j install instructions").
+In the following sections, i will assume you are runnning neo4j on linux as it's
+easier to document, but things are exactly the same.
 
 Choose an **empty and dedicated* directoty that will contain the generated datasbe : BEWARE AS DURING DATABASE CREATION THIS DIRECTORY WILL BE DELETED BY THE PLUGIN !**
 
@@ -80,6 +82,17 @@ Go to neo4j webapp (http://localhost:7474) and take a look at your graph databas
 
 `cd ~/tmp
 sudo cp ~/NetBeansProjects/schemacrawler-plugin-neo4j/target/schemacrawler-plugin-neo4j-1.0-SNAPSHOT.jar /opt/schemacrawler/lib/ && schemacrawler -host=localhost -port=5432 -database=sportsdb -user=sports_adm -password=user_adm  -schemas=public -c=neo4j -infolevel=maximum -server=postgresql -loglevel=CONFIG -outputDir=./neo4j`
+
+# Donate
+
+I'm not asking for money nor any kind of gift, but sometimes, to keep motivation
+safe while developing free software, it's nice to get some recognization.
+
+So, *if you like this software*, please :
+
+1. Ask to connect with me on my [my linkedin profile](https://www.linkedin.com/profile/view?id=253709684 "my linkedin profile")
+2. Write some recommandation 
+
 
 # Acknowledgements
 
