@@ -1,4 +1,4 @@
-# schemacrawler-plugin-neo4j
+# schemacrawler-plugin-neo4j [![Build Status](https://travis-ci.org/adriens/schemacrawler-plugin-neo4j.svg?branch=master)](https://travis-ci.org/adriens/schemacrawler-plugin-neo4j)
 
 ## Description
 
