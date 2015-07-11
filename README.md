@@ -38,7 +38,7 @@ Below command to build it yourself :
     git clone https://github.com/adriens/schemacrawler-plugin-neo4j.git
     cd schemacrawler-plugin-neo4j
     mvn package
-    schemacrawler-plugin-neo4j-${version}
+    ls -la target/schemacrawler-plugin-neo4j-${version}
 
 ## Schemacrawler requirements
 
