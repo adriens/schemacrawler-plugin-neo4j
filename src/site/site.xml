@@ -25,6 +25,10 @@
     </skin>
     <body>
         <links>
+            <!-- Plugin links -->
+            <item name = "Plugin ghp (Githug Pages)" href = "http://adriens.github.io/schemacrawler-plugin-neo4j/"/>
+            <item name = "Project githug page" href = "https://github.com/adriens/schemacrawler-plugin-neo4j"/>
+
             <!-- Schemacrawler links -->
             <item name="Schemacrawler homepage" href="http://schemacrawler.sourceforge.net/" />
             <item name="Download Schemacrawler" href="http://sourceforge.net/projects/schemacrawler/files/"/>
