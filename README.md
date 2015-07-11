@@ -106,8 +106,9 @@ safe while developing free software, it's nice to get some recognization.
 
 So, *if you like this software*, please :
 
-1. Ask to connect with me on my [my linkedin profile](https://www.linkedin.com/profile/view?id=253709684 "my linkedin profile")
-2. Write some recommandation
+1. Simply star the project on github
+2. Ask to connect with me on my [my linkedin profile](https://www.linkedin.com/profile/view?id=253709684 "my linkedin profile")
+3. Write some recommandation
 
 
 # Acknowledgements
