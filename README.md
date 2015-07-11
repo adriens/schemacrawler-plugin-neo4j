@@ -4,7 +4,7 @@
 
 This is a [schemacrawler](http://schemacrawler.sourceforge.net/ "Schemacrawler Homepage") [plugin](http://schemacrawler.sourceforge.net/plugins.html "Schemacrawler plugins homepage") that dumps database structure (also called schema) into a [neo4j](http://neo4j.com/ "Neo4j homepage") database. Once this done, you can view it in [neo4j web console](http://neo4j.com/developer/guide-data-visualization/#_product_keylines_neo4j_graph_visualization "Neo4j visualization"), perform [CYPHER](http://neo4j.com/developer/cypher-query-language/#_about_cypher "About CYPHER") queries on it and hence allows you to report your database schema the way you want.
 
-<a href="https://vimeo.com/97204829" target="_blank"><img src="http://dev.assets.neo4j.com.s3.amazonaws.com/wp-content/uploads/2014/08/VLBCcWS-u6EcWuGxslN9UxCJWIiMNFR5Kv0vFnVqz3KVyvih5n3LF3RgEWpT99V6oTzlpnlvzroac8viV2gm4mOWgvw5IP8HiyZfCbx498ZgEQBX9XgqFumV.png?_ga=1.151612667.310337467.1434158905" 
+<a href="https://vimeo.com/97204829" target="_blank"><img src="http://dev.assets.neo4j.com.s3.amazonaws.com/wp-content/uploads/2014/08/VLBCcWS-u6EcWuGxslN9UxCJWIiMNFR5Kv0vFnVqz3KVyvih5n3LF3RgEWpT99V6oTzlpnlvzroac8viV2gm4mOWgvw5IP8HiyZfCbx498ZgEQBX9XgqFumV.png?_ga=1.151612667.310337467.1434158905"
 alt="Screenshot" border="10" /></a>
 
 
@@ -48,9 +48,9 @@ Follow neo4j [install instructions](http://neo4j.com/docs/stable/server-installa
 In the following sections, i will assume you are runnning neo4j on linux as it's
 easier to document, but things are exactly the same.
 
-Choose an **empty and dedicated* directoty that will contain the generated datasbe : BEWARE AS DURING DATABASE CREATION THIS DIRECTORY WILL BE DELETED BY THE PLUGIN !**
+Choose an **empty and dedicated* directoty that will contain the generated database : BEWARE AS DURING DATABASE CREATION THIS DIRECTORY WILL BE DELETED BY THE PLUGIN !**
 
-# Generate the neo4j graph database !
+# Generate the neo4j graph database
 
 **Let's assume your neo4j graph database directory is `~/neo4j.`**
 
@@ -73,11 +73,11 @@ Go to neo4j webapp (http://localhost:7474) and take a look at your graph databas
 ##  Start neo4j server :
 
 `cd ~/apps/neo4j-community-2.3.0-M02 && ./bin/neo4j start`
-  
+
 ## Stop neo4j server and make some cleanup :
 
 `cd ~/apps/neo4j-community-2.3.0-M02 && ./bin/neo4j stop && rm -rf ~/neo4j`
-  
+
 ## Run schemacrawler
 
 `cd ~/tmp
@@ -96,7 +96,7 @@ safe while developing free software, it's nice to get some recognization.
 So, *if you like this software*, please :
 
 1. Ask to connect with me on my [my linkedin profile](https://www.linkedin.com/profile/view?id=253709684 "my linkedin profile")
-2. Write some recommandation 
+2. Write some recommandation
 
 
 # Acknowledgements
