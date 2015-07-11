@@ -45,7 +45,8 @@ Below command to build it yourself :
 To create your neo4j database for your database schema, you need :
 
 * A proper schemacrawler install
-* A database with a schema you want to analyze (and if possible a nice one). I personally did use the sportsdb database sample (http://www.sportsdb.org/sd/samples)
+* A database with a schema you want to analyze (and if possible a nice one).
+I personally did use the sportsdb database sample (http://www.sportsdb.org/sd/samples)
 * Test a schemacrawler `graph` generation
 * drop the jar you've built in `$SCHEMACARWLER_HOME/lib`
 
@@ -55,7 +56,9 @@ Follow neo4j [install instructions](http://neo4j.com/docs/stable/server-installa
 In the following sections, i will assume you are runnning neo4j on linux as it's
 easier to document, but things are exactly the same.
 
-Choose an **empty and dedicated* directoty that will contain the generated database : BEWARE AS DURING DATABASE CREATION THIS DIRECTORY WILL BE DELETED BY THE PLUGIN !**
+Choose an **empty and dedicated* directoty that will contain the generated
+database : BEWARE AS DURING DATABASE CREATION THIS DIRECTORY WILL BE DELETED
+BY THE PLUGIN !**
 
 # Generate the neo4j graph database
 
@@ -71,7 +74,8 @@ Choose an **empty and dedicated* directoty that will contain the generated datab
 
 ## Browse the database
 
-Go to neo4j webapp (http://localhost:7474) and take a look at your graph database schema
+Go to neo4j webapp (http://localhost:7474) and take a look at your graph
+database schema
 
 
 # (Dirty) dev scripts
@@ -108,6 +112,12 @@ So, *if you like this software*, please :
 
 # Acknowledgements
 
-I want to thank my dear girlfriend for her patience when i develop software on the couch while she's watching and for supporting and listening to my enthousiatics thoughts about development, free software, ... and so many other tech things...
+I want to thank my dear girlfriend for her patience when i develop software on
+the couch while she's watching and for supporting and listening to my
+enthousiatics thoughts about development, free software, ... and so many other
+tech things...
 
-I also want to thank [Sualeh Fatehi](https://github.com/sualeh "Sualeh Fatehi") for his very kind help and support on Schemacrawler, and for always answering questions very fast... and of course for his great software with which i can make so many cool things !
+I also want to thank [Sualeh Fatehi](https://github.com/sualeh "Sualeh Fatehi")
+for his very kind help and support on Schemacrawler, and for always answering
+questions very fast... and of course for his great software with which i can
+make so many cool things !
