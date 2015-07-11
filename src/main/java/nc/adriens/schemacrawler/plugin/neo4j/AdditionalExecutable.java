@@ -62,7 +62,9 @@ public class AdditionalExecutable extends BaseStagedExecutable {
         setDbService(dbFactory.newEmbeddedDatabase(getOutputDir()));
     }
 
-    public void feedSchemas(final Catalog catalog) {
+
+
+    public void feedTables(final Catalog catalog) {
         try (Transaction tx = getDbService().beginTx()) {
             for (final Schema schema : catalog.getSchemas()) {
                 Node schemaNode = dbService.createNode(DatabaseNodeType.SCHEMA);
@@ -70,15 +72,10 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                 schemaNode.setProperty("FullName", schema.getFullName());
                 schemaNode.setProperty("LookupKey", schema.getLookupKey());
                 schemaNode.setProperty("Remarks", schema.getRemarks());
-
-            }
-            tx.success();
-        }
-    }
-
-    public void feedTables(final Catalog catalog) {
-        try (Transaction tx = getDbService().beginTx()) {
-            for (final Schema schema : catalog.getSchemas()) {
+                
+                // we have the schema node
+                // for each table, attach the table to the schema without
+                // having to find it for better performances (no index needed)
                 for (final Table table : catalog.getTables(schema)) {
                     Node tableNode = dbService.createNode(DatabaseNodeType.TABLE);
                     tableNode.setProperty("nbColumns", table.getColumns().size());
@@ -90,10 +87,14 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                     tableNode.setProperty("schemaFullname", table.getSchema().getFullName());
                     tableNode.setProperty("tableType", table.getTableType().toString());
                     
+                    // attach the table to its schema
+                    Relationship schemaRelationShip = tableNode.createRelationshipTo(schemaNode, SchemaRelationShips.BELONGS_TO_SCHEMA);
+                    
                     //writer.println("o--> " + table);
                     for (final Column column : table.getColumns()) {
                         Node columnNode = dbService.createNode(DatabaseNodeType.TABLE_COLUMN);
-                        columnNode.setProperty("OrdinalPosition", column.getOrdinalPosition());
+                        columnNode.setProperty("ordinalPosition", column.getOrdinalPosition());
+
                         //writer.println("     o--> " + column);
                         Relationship relationship = columnNode.createRelationshipTo(tableNode, SchemaRelationShips.IS_COLUMN_OF_TABLE);
                     }
@@ -110,8 +111,6 @@ public class AdditionalExecutable extends BaseStagedExecutable {
         try (final PrintWriter writer = new PrintWriter(outputOptions.openNewOutputWriter());) {
             setOutputDir(additionalConfiguration.getStringValue("outputDir", "neo4j"));
             init();
-            //TODO implement relation between schema and tables (table BELONGS_TO_SCHEMA)
-            feedSchemas(catalog);
             feedTables(catalog);
 
             for (final Schema schema : catalog.getSchemas()) {
