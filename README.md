@@ -111,3 +111,11 @@ So, *if you like this software*, please :
 I want to thank my dear girlfriend for her patience when i develop software on the couch while she's watching and for supporting and listening to my enthousiatics thoughts about development, free software, ... and so many other tech things...
 
 I also want to thank [Sualeh Fatehi](https://github.com/sualeh "Sualeh Fatehi") for his very kind help and support on Schemacrawler, and for always answering questions very fast... and of course for his great software with which i can make so many cool things !
+
+# TODO
+
+* Add a Cyper queries section
+* Add a section that details postgres db creation example based on sportsdb
+* Push artfact to central repo (WORK IN PROGRESS, see https://issues.sonatype.org/browse/OSSRH-16543)
+* Upload a ready to user neo4j db sample
+* Add demo video
