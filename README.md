@@ -83,6 +83,11 @@ Go to neo4j webapp (http://localhost:7474) and take a look at your graph databas
 `cd ~/tmp
 sudo cp ~/NetBeansProjects/schemacrawler-plugin-neo4j/target/schemacrawler-plugin-neo4j-1.0-SNAPSHOT.jar /opt/schemacrawler/lib/ && schemacrawler -host=localhost -port=5432 -database=sportsdb -user=sports_adm -password=user_adm  -schemas=public -c=neo4j -infolevel=maximum -server=postgresql -loglevel=CONFIG -outputDir=./neo4j`
 
+# Maven Central Repo availability
+
+A ticket has been open to upload artifact to Sonatype (http://central.sonatype.org/), see
+https://issues.sonatype.org/browse/OSSRH-16543 for more details.
+
 # Donate
 
 I'm not asking for money nor any kind of gift, but sometimes, to keep motivation
