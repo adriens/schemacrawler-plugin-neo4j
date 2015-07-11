@@ -12,5 +12,5 @@ import org.neo4j.graphdb.RelationshipType;
  * @author adriens
  */
 public enum SchemaRelationShips implements RelationshipType {
-    IS_COLUMN_OF_TABLE
+    IS_COLUMN_OF_TABLE, BELONGS_TO_SCHEMA
 }
