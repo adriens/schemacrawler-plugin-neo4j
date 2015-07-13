@@ -1,1 +1,1 @@
-nc.adriens.schemacrawler.plugin.neo4j.AdditionalCommandProvider
+io.github.adriens.schemacrawler.plugin.neo4j.AdditionalCommandProvider
