@@ -10,6 +10,7 @@
         <name>github</name>
         <url>https://github.com/adriens/schemacrawler-plugin-neo4j</url>
     </organization>
+    <url>https://github.com/adriens/schemacrawler-plugin-neo4j</url>
     <licenses>
         <license>
             <url>http://opensource.org/licenses/lgpl-3.0.html</url>
@@ -104,6 +105,20 @@
     </distributionManagement>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
