@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.adriens</groupId>
     <artifactId>schemacrawler-plugin-neo4j</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <name>Neo4j schemacrawler plugin</name>
     <description>A schemcrawler plugin that generates a neo4j graph from database schema.</description>
     <organization>
