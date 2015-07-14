@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
@@ -43,6 +44,8 @@ import schemacrawler.tools.executable.BaseStagedExecutable;
  */
 public class AdditionalExecutable extends BaseStagedExecutable {
 
+    private static final Logger LOGGER = Logger.getLogger(AdditionalExecutable.class.getName());
+    
     static final String COMMAND = "neo4j";
 
     private String outputDir;
