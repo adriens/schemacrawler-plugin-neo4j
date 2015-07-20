@@ -1,4 +1,4 @@
-# schemacrawler-plugin-neo4j [![Build Status](https://travis-ci.org/adriens/schemacrawler-plugin-neo4j.svg?branch=master)](https://travis-ci.org/adriens/schemacrawler-plugin-neo4j) [![Coverage Status](https://coveralls.io/repos/adriens/schemacrawler-plugin-neo4j/badge.svg?branch=master&service=github)](https://coveralls.io/github/adriens/schemacrawler-plugin-neo4j?branch=master)
+# schemacrawler-plugin-neo4j [![Build Status](https://travis-ci.org/adriens/schemacrawler-plugin-neo4j.svg?branch=master)](https://travis-ci.org/adriens/schemacrawler-plugin-neo4j) [![Coverage Status](https://s3.amazonaws.com/assets.coveralls.io/badges/coveralls_3.svg)](https://coveralls.io/github/adriens/schemacrawler-plugin-neo4j?branch=master)
 
 ## Description
 
