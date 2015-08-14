@@ -87,7 +87,7 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                     tableNode.setProperty("name", table.getName());
                     tableNode.setProperty("remarks", table.getRemarks());
                     tableNode.setProperty("schemaName", table.getSchema().getName());
-                    tableNode.setProperty("schemaFullname", table.getSchema().getFullName());
+                    tableNode.setProperty("tableFullname", table.getFullName());
                     tableNode.setProperty("tableType", table.getTableType().toString());
                     
                     // attach the table to its schema
@@ -96,9 +96,28 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                     //writer.println("o--> " + table);
                     for (final Column column : table.getColumns()) {
                         Node columnNode = dbService.createNode(DatabaseNodeType.TABLE_COLUMN);
-                        columnNode.setProperty("ordinalPosition", column.getOrdinalPosition());
+                        columnNode.setProperty("columnOrdinalPosition", column.getOrdinalPosition());
+                        columnNode.setProperty("columnDataType", column.getColumnDataType().toString());
+                        columnNode.setProperty("columnName", column.getName() );
+                        columnNode.setProperty("columnFullName", column.getFullName());
+                        if(column.getDefaultValue() != null){
+                         columnNode.setProperty("columnDefaultValue", column.getDefaultValue());   
+                        }
 
-                        //writer.println("     o--> " + column);
+                        if(column.getLookupKey() != null){
+                        columnNode.setProperty("columnLookupKey", column.getLookupKey());
+                        }
+                        
+                        if(column.getRemarks() != null){
+                            columnNode.setProperty("columnsRemarks", column.getRemarks());
+                        }
+
+                        if(column.getShortName() != null){
+                        columnNode.setProperty("columnShortName", column.getShortName());
+                        }
+                        columnNode.setProperty("columnSize", column.getSize());
+                        columnNode.setProperty("columnWidth", column.getWidth());
+
                         Relationship relationship = columnNode.createRelationshipTo(tableNode, SchemaRelationShips.IS_COLUMN_OF_TABLE);
                     }
 
