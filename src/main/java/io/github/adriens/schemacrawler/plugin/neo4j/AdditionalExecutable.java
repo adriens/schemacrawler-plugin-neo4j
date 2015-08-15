@@ -9,12 +9,12 @@ package io.github.adriens.schemacrawler.plugin.neo4j;
 
  schemacrawler -host=localhost -port=5432 -database=sportsdb -user=sc -password=sc  -schemas=public -c=neo4j -infolevel=maximum -server=postgresql -loglevel=CONFIG -outputDir=c:/tmp
 
-schemacrawler -host=localhost -port=5432 -database=sportsdb -user=sports_adm -password=user_adm  -schemas=public -c=neo4j -infolevel=maximum -server=postgresql -loglevel=CONFIG -outputDir=./neo4j
+ schemacrawler -host=localhost -port=5432 -database=sportsdb -user=sports_adm -password=user_adm  -schemas=public -c=neo4j -infolevel=maximum -server=postgresql -loglevel=CONFIG -outputDir=./neo4j
 
-MATCH (n)
-RETURN n;
+ MATCH (n)
+ RETURN n;
 
-MATCH (a)-[r:CONTAINS_SCHEMA]->(b)
+ MATCH (a)-[r:CONTAINS_SCHEMA]->(b)
  RETURN r
 
 
@@ -50,7 +50,7 @@ import schemacrawler.tools.executable.BaseStagedExecutable;
 public class AdditionalExecutable extends BaseStagedExecutable {
 
     private static final Logger LOGGER = Logger.getLogger(AdditionalExecutable.class.getName());
-    
+
     static final String COMMAND = "neo4j";
 
     private String outputDir;
@@ -70,8 +70,6 @@ public class AdditionalExecutable extends BaseStagedExecutable {
         setDbService(dbFactory.newEmbeddedDatabase(getOutputDir()));
     }
 
-
-
     public void feedTables(final Catalog catalog) {
         try (Transaction tx = getDbService().beginTx()) {
             for (final Schema schema : catalog.getSchemas()) {
@@ -80,7 +78,7 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                 schemaNode.setProperty("FullName", schema.getFullName());
                 schemaNode.setProperty("LookupKey", schema.getLookupKey());
                 schemaNode.setProperty("Remarks", schema.getRemarks());
-                
+
                 // we have the schema node
                 // for each table, attach the table to the schema without
                 // having to find it for better performances (no index needed)
@@ -95,31 +93,31 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                     tableNode.setProperty("tableFullname", table.getFullName());
                     tableNode.setProperty("tableType", table.getTableType().toString());
                     table.getDefinition();
-                    
+
                     // attach the table to its schema
                     Relationship schemaRelationShip = tableNode.createRelationshipTo(schemaNode, SchemaRelationShips.BELONGS_TO_SCHEMA);
-                    
+
                     //writer.println("o--> " + table);
                     for (final Column column : table.getColumns()) {
                         Node columnNode = dbService.createNode(DatabaseNodeType.TABLE_COLUMN);
                         columnNode.setProperty("columnOrdinalPosition", column.getOrdinalPosition());
                         columnNode.setProperty("columnDataType", column.getColumnDataType().toString());
-                        columnNode.setProperty("name", column.getName() );
+                        columnNode.setProperty("name", column.getName());
                         columnNode.setProperty("fullName", column.getFullName());
-                        if(column.getDefaultValue() != null){
-                         columnNode.setProperty("defaultValue", column.getDefaultValue());   
+                        if (column.getDefaultValue() != null) {
+                            columnNode.setProperty("defaultValue", column.getDefaultValue());
                         }
 
-                        if(column.getLookupKey() != null){
-                        columnNode.setProperty("lookupKey", column.getLookupKey());
+                        if (column.getLookupKey() != null) {
+                            columnNode.setProperty("lookupKey", column.getLookupKey());
                         }
-                        
-                        if(column.getRemarks() != null){
+
+                        if (column.getRemarks() != null) {
                             columnNode.setProperty("remarks", column.getRemarks());
                         }
 
-                        if(column.getShortName() != null){
-                        columnNode.setProperty("shortName", column.getShortName());
+                        if (column.getShortName() != null) {
+                            columnNode.setProperty("shortName", column.getShortName());
                         }
                         columnNode.setProperty("size", column.getSize());
                         columnNode.setProperty("width", column.getWidth());
@@ -129,10 +127,9 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                     // end of columns
                     for (final Index index : table.getIndices()) {
                         Node indexNode;
-                        if(index.isUnique()){
+                        if (index.isUnique()) {
                             indexNode = dbService.createNode(DatabaseNodeType.UNIQUE_INDEX);
-                        }
-                        else{
+                        } else {
                             indexNode = dbService.createNode(DatabaseNodeType.INDEX);
                         }
                         indexNode.setProperty("schema", index.getSchema().getName());
@@ -141,18 +138,17 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                         indexNode.setProperty("fullName", index.getFullName());
                         indexNode.setProperty("cardinality", index.getCardinality());
                         indexNode.setProperty("indexPages", index.getPages());
-                        
-                        
+
                         indexNode.setProperty("indexTypeName", index.getIndexType().name());
                         indexNode.setProperty("indexTypeId", index.getIndexType().getId());
                         indexNode.setProperty("indexTypeOrdinal", index.getIndexType().ordinal());
-                        
+
                         //indexNode.setProperty("lookupKey", index.getLookupKey());
-                        if(index.hasDefinition()){
+                        if (index.hasDefinition()) {
                             indexNode.setProperty("definition", index.getDefinition());
                         }
 
-                        if(index.hasRemarks()){
+                        if (index.hasRemarks()) {
                             indexNode.setProperty("remarks", index.getRemarks());
                         }
 
@@ -164,26 +160,26 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                             Node targetColumnNode = dbService.findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", indexColumn.getFullName());
                             Relationship indexPointsToColumns = indexNode.createRelationshipTo(targetColumnNode, SchemaRelationShips.INDEXES_COLUMN);
                         }
-                        
+
                     }
-                    
+
                     // put the PK
-                    if(table.getPrimaryKey() != null){
+                    if (table.getPrimaryKey() != null) {
                         // there is a PK
                         PrimaryKey pk = table.getPrimaryKey();
-                        Node pkNode =  dbService.createNode(DatabaseNodeType.PRIMARY_KEY);
+                        Node pkNode = dbService.createNode(DatabaseNodeType.PRIMARY_KEY);
                         pkNode.setProperty("fullName", pk.getFullName());
                         pkNode.setProperty("name", pk.getName());
-                        if(pk.hasDefinition()){
+                        if (pk.hasDefinition()) {
                             pkNode.setProperty("definition", pk.getDefinition());
                         }
-                        if(pk.hasRemarks()){
+                        if (pk.hasRemarks()) {
                             pkNode.setProperty("remarks", pk.getRemarks());
                         }
                         pkNode.setProperty("cardinality", pk.getCardinality());
-                        
+
                         // attach PK to table columns
-                        for(final IndexColumn pkColumn : pk.getColumns()){
+                        for (final IndexColumn pkColumn : pk.getColumns()) {
                             Node targetColumnNode = dbService.findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", pkColumn.getFullName());
                             Relationship pkPointsToColumn = pkNode.createRelationshipTo(targetColumnNode, SchemaRelationShips.PK_OF_COLUMN);
                         }
@@ -191,30 +187,29 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                     //table.getPrivileges()
                     //table.getTriggers();
                     // Put foreign keys
-                    for(final ForeignKey fk : table.getExportedForeignKeys()){
+                    for (final ForeignKey fk : table.getExportedForeignKeys()) {
                         Node fkNode = dbService.createNode(DatabaseNodeType.FOREIGN_KEY);
                         fkNode.setProperty("fullName", fk.getFullName());
                         fkNode.setProperty("name", fk.getName());
-                        if(fk.hasRemarks()){
+                        if (fk.hasRemarks()) {
                             fkNode.setProperty("remarks", fk.getRemarks());
                         }
-                        
+
                         fkNode.setProperty("updateRuleId", fk.getUpdateRule().getId());
                         fkNode.setProperty("updateRuleName", fk.getUpdateRule().name());
                         fkNode.setProperty("updateRuleOrdinal", fk.getUpdateRule().ordinal());
-                        
+
                         fkNode.setProperty("deleteRuleId", fk.getDeleteRule().getId());
                         fkNode.setProperty("deleteRuleName", fk.getDeleteRule().name());
                         fkNode.setProperty("deleteRuleOrdinal", fk.getDeleteRule().ordinal());
-                        
+
                         fkNode.setProperty("deferrabilityName", fk.getDeferrability().name());
-                        
-                        
-                        for(final ForeignKeyColumnReference fkRef : fk.getColumnReferences()){
+
+                        for (final ForeignKeyColumnReference fkRef : fk.getColumnReferences()) {
                             // get remote PK key and create relation
                             Node targetRefColumnNode = dbService.findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", fkRef.getPrimaryKeyColumn().getFullName());
                             Relationship foreignKeyColumnReference = targetRefColumnNode.createRelationshipTo(fkNode, SchemaRelationShips.IS_REFERENCED_BY_FK);
-                            
+
                             // get local table column and create relation
                             //Node localColumnNode = dbService.findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", fkRef.getForeignKeyColumn().getFullName());
                             //Relationship localRelation = localColumnNode.createRelationshipTo(fkNode, SchemaRelationShips.IS_FK_COLUMN_OF);
@@ -226,6 +221,37 @@ public class AdditionalExecutable extends BaseStagedExecutable {
         }
     }
 
+    public void attachFKs(final Catalog catalog) {
+        try (Transaction tx = getDbService().beginTx()) {
+            for (final Schema schema : catalog.getSchemas()) {
+                for (final Table table : catalog.getTables(schema)) {
+                    int i = 0;
+                    for(final ForeignKey fk : table.getForeignKeys()){
+                        // get the fkNode from the (existing) graph
+                        //Node fkNode = getDbService().findNode(DatabaseNodeType.FOREIGN_KEY, "fullName", fk.getFullName());
+                        // now, for the fk, get the referenced fields
+                        
+                        for (final ForeignKeyColumnReference fkReference : fk.getColumnReferences()){
+                            //Node fkReferenceNode = getDbService().findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", fkReference.getForeignKeyColumn().getFullName());
+                            // make the relation
+                            // be sure that the fk attaches the good table column
+                            if(fkReference.getForeignKeyColumn().getParent().getFullName().equals(table.getFullName())){
+                            Relationship fkRelation =  getDbService().findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", fkReference.getForeignKeyColumn().getFullName()).createRelationshipTo(getDbService().findNode(DatabaseNodeType.FOREIGN_KEY, "fullName", fk.getFullName()), SchemaRelationShips.IS_COLUMN_OF_FK);
+                            fkRelation.setProperty("nbItem", i);
+                            fkRelation.setProperty("fkFullName", fk.getFullName());
+                            fkRelation.setProperty("tableFullName", table.getFullName());
+                            i++;    
+                            }
+                            
+                            
+                        }
+                    }
+                }
+            }
+        tx.success();
+        }
+    }
+
     @Override
     public void executeOn(final Catalog catalog, final Connection connection)
             throws Exception {
@@ -233,6 +259,7 @@ public class AdditionalExecutable extends BaseStagedExecutable {
             setOutputDir(additionalConfiguration.getStringValue("outputDir", "neo4j"));
             init();
             feedTables(catalog);
+            attachFKs(catalog);
 
             for (final Schema schema : catalog.getSchemas()) {
 //        System.out.println(schema);
