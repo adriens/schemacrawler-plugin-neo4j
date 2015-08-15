@@ -12,5 +12,5 @@ import org.neo4j.graphdb.Label;
  * @author adriens
  */
 public enum DatabaseNodeType implements Label{
-    SCHEMA, TABLE, TABLE_COLUMN, INDEX
+    SCHEMA, TABLE, TABLE_COLUMN, INDEX, UNIQUE_INDEX
 }

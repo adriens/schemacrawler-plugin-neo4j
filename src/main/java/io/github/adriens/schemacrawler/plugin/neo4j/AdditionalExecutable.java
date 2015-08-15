@@ -125,26 +125,34 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                     }
                     // end of columns
                     for (final Index index : table.getIndices()) {
-                        Node indexNode = dbService.createNode(DatabaseNodeType.INDEX);
+                        Node indexNode;
+                        if(index.isUnique()){
+                            indexNode = dbService.createNode(DatabaseNodeType.UNIQUE_INDEX);
+                        }
+                        else{
+                            indexNode = dbService.createNode(DatabaseNodeType.INDEX);
+                        }
                         indexNode.setProperty("schema", index.getSchema().getName());
                         indexNode.setProperty("name", index.getName());
                         indexNode.setProperty("shortName", index.getShortName());
                         indexNode.setProperty("fullName", index.getFullName());
                         indexNode.setProperty("cardinality", index.getCardinality());
                         indexNode.setProperty("indexPages", index.getPages());
-                        indexNode.setProperty("definition", index.getDefinition());
+                        
                         
                         indexNode.setProperty("indexTypeName", index.getIndexType().name());
                         indexNode.setProperty("indexTypeId", index.getIndexType().getId());
                         indexNode.setProperty("indexTypeOrdinal", index.getIndexType().ordinal());
                         
                         //indexNode.setProperty("lookupKey", index.getLookupKey());
-                        //indexNode.setProperty("remarks", index.getRemarks());
-                        
-                        
-                        // attach index to table
-                        Relationship indexBelongsToTable = indexNode.createRelationshipTo(tableNode, SchemaRelationShips.IS_INDEX_OF_TABLE);
-                        indexBelongsToTable.setProperty("cardinality", index.getCardinality());
+                        if(index.hasDefinition()){
+                            indexNode.setProperty("definition", index.getDefinition());
+                        }
+
+                        if(index.hasRemarks()){
+                            indexNode.setProperty("remarks", index.getRemarks());
+                        }
+
                         // attach index to table columns
                         for (final IndexColumn indexColumn : index.getColumns()) {
                             //indexColumn.getFullName()
@@ -155,7 +163,8 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                         }
                         
                     }
-                    //table.getIndices()
+                    // put the PK
+                    
                     //table.getPrimaryKey()
                     //table.getPrivileges()
                     //table.getTriggers();
