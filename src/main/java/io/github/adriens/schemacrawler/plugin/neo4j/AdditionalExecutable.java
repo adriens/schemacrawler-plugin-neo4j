@@ -34,6 +34,8 @@ import org.neo4j.graphdb.Relationship;
 
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Column;
+import schemacrawler.schema.ForeignKey;
+import schemacrawler.schema.ForeignKeyColumnReference;
 import schemacrawler.schema.Index;
 import schemacrawler.schema.IndexColumn;
 import schemacrawler.schema.PrimaryKey;
@@ -188,7 +190,36 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                     }
                     //table.getPrivileges()
                     //table.getTriggers();
-                    
+                    // Put foreign keys
+                    for(final ForeignKey fk : table.getExportedForeignKeys()){
+                        Node fkNode = dbService.createNode(DatabaseNodeType.FOREIGN_KEY);
+                        fkNode.setProperty("fullName", fk.getFullName());
+                        fkNode.setProperty("name", fk.getName());
+                        if(fk.hasRemarks()){
+                            fkNode.setProperty("remarks", fk.getRemarks());
+                        }
+                        
+                        fkNode.setProperty("updateRuleId", fk.getUpdateRule().getId());
+                        fkNode.setProperty("updateRuleName", fk.getUpdateRule().name());
+                        fkNode.setProperty("updateRuleOrdinal", fk.getUpdateRule().ordinal());
+                        
+                        fkNode.setProperty("deleteRuleId", fk.getDeleteRule().getId());
+                        fkNode.setProperty("deleteRuleName", fk.getDeleteRule().name());
+                        fkNode.setProperty("deleteRuleOrdinal", fk.getDeleteRule().ordinal());
+                        
+                        fkNode.setProperty("deferrabilityName", fk.getDeferrability().name());
+                        
+                        
+                        for(final ForeignKeyColumnReference fkRef : fk.getColumnReferences()){
+                            // get remote PK key and create relation
+                            Node targetRefColumnNode = dbService.findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", fkRef.getPrimaryKeyColumn().getFullName());
+                            Relationship foreignKeyColumnReference = targetRefColumnNode.createRelationshipTo(fkNode, SchemaRelationShips.IS_REFERENCED_BY_FK);
+                            
+                            // get local table column and create relation
+                            //Node localColumnNode = dbService.findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", fkRef.getForeignKeyColumn().getFullName());
+                            //Relationship localRelation = localColumnNode.createRelationshipTo(fkNode, SchemaRelationShips.IS_FK_COLUMN_OF);
+                        }
+                    }
                 }
                 tx.success();
             }
