@@ -34,6 +34,8 @@ import org.neo4j.graphdb.Relationship;
 
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Column;
+import schemacrawler.schema.Index;
+import schemacrawler.schema.IndexColumn;
 import schemacrawler.schema.Schema;
 import schemacrawler.schema.Table;
 import schemacrawler.tools.executable.BaseStagedExecutable;
@@ -89,6 +91,7 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                     tableNode.setProperty("schemaName", table.getSchema().getName());
                     tableNode.setProperty("tableFullname", table.getFullName());
                     tableNode.setProperty("tableType", table.getTableType().toString());
+                    table.getDefinition();
                     
                     // attach the table to its schema
                     Relationship schemaRelationShip = tableNode.createRelationshipTo(schemaNode, SchemaRelationShips.BELONGS_TO_SCHEMA);
@@ -98,29 +101,65 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                         Node columnNode = dbService.createNode(DatabaseNodeType.TABLE_COLUMN);
                         columnNode.setProperty("columnOrdinalPosition", column.getOrdinalPosition());
                         columnNode.setProperty("columnDataType", column.getColumnDataType().toString());
-                        columnNode.setProperty("columnName", column.getName() );
-                        columnNode.setProperty("columnFullName", column.getFullName());
+                        columnNode.setProperty("name", column.getName() );
+                        columnNode.setProperty("fullName", column.getFullName());
                         if(column.getDefaultValue() != null){
-                         columnNode.setProperty("columnDefaultValue", column.getDefaultValue());   
+                         columnNode.setProperty("defaultValue", column.getDefaultValue());   
                         }
 
                         if(column.getLookupKey() != null){
-                        columnNode.setProperty("columnLookupKey", column.getLookupKey());
+                        columnNode.setProperty("lookupKey", column.getLookupKey());
                         }
                         
                         if(column.getRemarks() != null){
-                            columnNode.setProperty("columnsRemarks", column.getRemarks());
+                            columnNode.setProperty("remarks", column.getRemarks());
                         }
 
                         if(column.getShortName() != null){
-                        columnNode.setProperty("columnShortName", column.getShortName());
+                        columnNode.setProperty("shortName", column.getShortName());
                         }
-                        columnNode.setProperty("columnSize", column.getSize());
-                        columnNode.setProperty("columnWidth", column.getWidth());
+                        columnNode.setProperty("size", column.getSize());
+                        columnNode.setProperty("width", column.getWidth());
 
                         Relationship relationship = columnNode.createRelationshipTo(tableNode, SchemaRelationShips.IS_COLUMN_OF_TABLE);
                     }
-
+                    // end of columns
+                    for (final Index index : table.getIndices()) {
+                        Node indexNode = dbService.createNode(DatabaseNodeType.INDEX);
+                        indexNode.setProperty("schema", index.getSchema().getName());
+                        indexNode.setProperty("name", index.getName());
+                        indexNode.setProperty("shortName", index.getShortName());
+                        indexNode.setProperty("fullName", index.getFullName());
+                        indexNode.setProperty("cardinality", index.getCardinality());
+                        indexNode.setProperty("indexPages", index.getPages());
+                        indexNode.setProperty("definition", index.getDefinition());
+                        
+                        indexNode.setProperty("indexTypeName", index.getIndexType().name());
+                        indexNode.setProperty("indexTypeId", index.getIndexType().getId());
+                        indexNode.setProperty("indexTypeOrdinal", index.getIndexType().ordinal());
+                        
+                        //indexNode.setProperty("lookupKey", index.getLookupKey());
+                        //indexNode.setProperty("remarks", index.getRemarks());
+                        
+                        
+                        // attach index to table
+                        Relationship indexBelongsToTable = indexNode.createRelationshipTo(tableNode, SchemaRelationShips.IS_INDEX_OF_TABLE);
+                        indexBelongsToTable.setProperty("cardinality", index.getCardinality());
+                        // attach index to table columns
+                        for (final IndexColumn indexColumn : index.getColumns()) {
+                            //indexColumn.getFullName()
+                            // Attach index to table column
+                            // get the target column to attach by its fullname
+                            Node targetColumnNode = dbService.findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", indexColumn.getFullName());
+                            Relationship indexPointsToColumns = indexNode.createRelationshipTo(targetColumnNode, SchemaRelationShips.INDEXES_COLUMN);
+                        }
+                        
+                    }
+                    //table.getIndices()
+                    //table.getPrimaryKey()
+                    //table.getPrivileges()
+                    //table.getTriggers();
+                    
                 }
                 tx.success();
             }
