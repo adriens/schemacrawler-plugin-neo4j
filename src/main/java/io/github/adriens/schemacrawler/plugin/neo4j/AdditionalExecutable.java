@@ -36,6 +36,7 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Column;
 import schemacrawler.schema.Index;
 import schemacrawler.schema.IndexColumn;
+import schemacrawler.schema.PrimaryKey;
 import schemacrawler.schema.Schema;
 import schemacrawler.schema.Table;
 import schemacrawler.tools.executable.BaseStagedExecutable;
@@ -163,9 +164,28 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                         }
                         
                     }
-                    // put the PK
                     
-                    //table.getPrimaryKey()
+                    // put the PK
+                    if(table.getPrimaryKey() != null){
+                        // there is a PK
+                        PrimaryKey pk = table.getPrimaryKey();
+                        Node pkNode =  dbService.createNode(DatabaseNodeType.PRIMARY_KEY);
+                        pkNode.setProperty("fullName", pk.getFullName());
+                        pkNode.setProperty("name", pk.getName());
+                        if(pk.hasDefinition()){
+                            pkNode.setProperty("definition", pk.getDefinition());
+                        }
+                        if(pk.hasRemarks()){
+                            pkNode.setProperty("remarks", pk.getRemarks());
+                        }
+                        pkNode.setProperty("cardinality", pk.getCardinality());
+                        
+                        // attach PK to table columns
+                        for(final IndexColumn pkColumn : pk.getColumns()){
+                            Node targetColumnNode = dbService.findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", pkColumn.getFullName());
+                            Relationship pkPointsToColumn = pkNode.createRelationshipTo(targetColumnNode, SchemaRelationShips.PK_OF_COLUMN);
+                        }
+                    }
                     //table.getPrivileges()
                     //table.getTriggers();
                     
