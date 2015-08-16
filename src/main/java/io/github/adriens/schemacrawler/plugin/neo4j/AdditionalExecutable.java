@@ -152,6 +152,8 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                             indexNode.setProperty("remarks", index.getRemarks());
                         }
 
+                        // attach index to it's table
+                        Relationship indexBelongsToTable = indexNode.createRelationshipTo(tableNode, SchemaRelationShips.BELONGS_TO_TABLE);
                         // attach index to table columns
                         for (final IndexColumn indexColumn : index.getColumns()) {
                             //indexColumn.getFullName()
