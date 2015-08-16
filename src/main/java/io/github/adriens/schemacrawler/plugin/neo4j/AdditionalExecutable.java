@@ -40,6 +40,7 @@ import schemacrawler.schema.Index;
 import schemacrawler.schema.IndexColumn;
 import schemacrawler.schema.PrimaryKey;
 import schemacrawler.schema.Schema;
+import schemacrawler.schema.Synonym;
 import schemacrawler.schema.Table;
 import schemacrawler.tools.executable.BaseStagedExecutable;
 
@@ -291,6 +292,28 @@ public class AdditionalExecutable extends BaseStagedExecutable {
         }
     }
 
+    public void putSynonyms(final Catalog catalog) {
+        try (Transaction tx = getDbService().beginTx()) {
+            for (final Schema schema : catalog.getSchemas()) {
+                
+                for(final Synonym synonym : catalog.getSynonyms(schema)){
+                    // add synonym to nodes
+                    // feed node with datas
+                    
+                    // attach synonym to schema
+                    
+                    // attach synonym to database object (?)
+                    //synonym.getReferencedObject().getClass();
+                }
+            }
+            tx.success();
+        }
+    }
+
+    // put sequences
+    
+    // put routines (should fail on pgsql jdbc driver)
+    
     @Override
     public void executeOn(final Catalog catalog, final Connection connection)
             throws Exception {
@@ -300,18 +323,7 @@ public class AdditionalExecutable extends BaseStagedExecutable {
             feedTables(catalog);
             putFKs(catalog);
             attachColumnsToFk(catalog);
-
-            for (final Schema schema : catalog.getSchemas()) {
-//        System.out.println(schema);
-//        for (final Table table: catalog.getTables(schema))
-//        {
-//          writer.println("o--> " + table);
-//          for (final Column column: table.getColumns())
-//          {
-//            writer.println("     o--> " + column);
-//          }
-                //}
-            }
+            putSynonyms(catalog);
         }
     }
 
