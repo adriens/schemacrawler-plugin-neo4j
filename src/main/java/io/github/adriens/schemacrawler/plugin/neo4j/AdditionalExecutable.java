@@ -90,7 +90,7 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                     tableNode.setProperty("name", table.getName());
                     tableNode.setProperty("remarks", table.getRemarks());
                     tableNode.setProperty("schemaName", table.getSchema().getName());
-                    tableNode.setProperty("tableFullname", table.getFullName());
+                    tableNode.setProperty("fullName", table.getFullName());
                     tableNode.setProperty("tableType", table.getTableType().toString());
                     table.getDefinition();
 
@@ -186,7 +186,8 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                     }
                     //table.getPrivileges()
                     //table.getTriggers();
-                    // Put foreign keys
+
+                    // Put exported foreign keys
                     for (final ForeignKey fk : table.getExportedForeignKeys()) {
                         Node fkNode = dbService.createNode(DatabaseNodeType.FOREIGN_KEY);
                         fkNode.setProperty("fullName", fk.getFullName());
@@ -208,11 +209,8 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                         for (final ForeignKeyColumnReference fkRef : fk.getColumnReferences()) {
                             // get remote PK key and create relation
                             Node targetRefColumnNode = dbService.findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", fkRef.getPrimaryKeyColumn().getFullName());
-                            Relationship foreignKeyColumnReference = targetRefColumnNode.createRelationshipTo(fkNode, SchemaRelationShips.IS_REFERENCED_BY_FK);
-
-                            // get local table column and create relation
-                            //Node localColumnNode = dbService.findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", fkRef.getForeignKeyColumn().getFullName());
-                            //Relationship localRelation = localColumnNode.createRelationshipTo(fkNode, SchemaRelationShips.IS_FK_COLUMN_OF);
+                            //Relationship foreignKeyColumnReference = targetRefColumnNode.createRelationshipTo(fkNode, SchemaRelationShips.IS_REFERENCED_BY);
+                            Relationship foreignKeyColumnReference = fkNode.createRelationshipTo(targetRefColumnNode, SchemaRelationShips.REFERENCES);
                         }
                     }
                 }
@@ -221,34 +219,73 @@ public class AdditionalExecutable extends BaseStagedExecutable {
         }
     }
 
-    public void attachFKs(final Catalog catalog) {
+    public void putFKs(final Catalog catalog) {
         try (Transaction tx = getDbService().beginTx()) {
             for (final Schema schema : catalog.getSchemas()) {
                 for (final Table table : catalog.getTables(schema)) {
                     int i = 0;
-                    for(final ForeignKey fk : table.getForeignKeys()){
+                    for (final ForeignKey fk : table.getForeignKeys()) {
                         // get the fkNode from the (existing) graph
                         //Node fkNode = getDbService().findNode(DatabaseNodeType.FOREIGN_KEY, "fullName", fk.getFullName());
-                        // now, for the fk, get the referenced fields
-                        
-                        for (final ForeignKeyColumnReference fkReference : fk.getColumnReferences()){
-                            //Node fkReferenceNode = getDbService().findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", fkReference.getForeignKeyColumn().getFullName());
-                            // make the relation
-                            // be sure that the fk attaches the good table column
-                            if(fkReference.getForeignKeyColumn().getParent().getFullName().equals(table.getFullName())){
-                            Relationship fkRelation =  getDbService().findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", fkReference.getForeignKeyColumn().getFullName()).createRelationshipTo(getDbService().findNode(DatabaseNodeType.FOREIGN_KEY, "fullName", fk.getFullName()), SchemaRelationShips.IS_COLUMN_OF_FK);
-                            fkRelation.setProperty("nbItem", i);
-                            fkRelation.setProperty("fkFullName", fk.getFullName());
-                            fkRelation.setProperty("tableFullName", table.getFullName());
-                            i++;    
-                            }
-                            
-                            
+                        Node fkNode;
+                        if (getDbService().findNode(DatabaseNodeType.FOREIGN_KEY, "fullName", fk.getFullName()) == null) {
+                            fkNode = dbService.createNode(DatabaseNodeType.FOREIGN_KEY);
+                            fkNode.setProperty("fullName", fk.getFullName());
                         }
+                        // now, the fkNode exists but is not linked to its table columns
+                        // find the table column used by this fk
+
+                        // Add fk is it does not yest exist
+                        //getDbService().findNode(DatabaseNodeType.FOREIGN_KEY, "fullName", fk.getFullName());
+                        //TODO : attach the fk to the table it belongs to (for easier queries)
+                        /*
+                         for (final ForeignKeyColumnReference fkReference : fk.getColumnReferences()){
+                         //Node fkReferenceNode = getDbService().findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", fkReference.getForeignKeyColumn().getFullName());
+                         // make the relation
+                         // be sure that the fk attaches the good table column
+                         if(fkReference.getForeignKeyColumn().getParent().getFullName().equals(table.getFullName())){
+                         Relationship fkRelation =  getDbService().findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", fkReference.getForeignKeyColumn().getFullName()).createRelationshipTo(getDbService().findNode(DatabaseNodeType.FOREIGN_KEY, "fullName", fk.getFullName()), SchemaRelationShips.IS_COLUMN_OF_FK);
+                         fkRelation.setProperty("nbItem", i);
+                         fkRelation.setProperty("fkFullName", fk.getFullName());
+                         fkRelation.setProperty("tableFullName", table.getFullName());
+                         i++;    
+                         }
+                            
+                            
+                         }*/
                     }
                 }
             }
-        tx.success();
+            tx.success();
+        }
+    }
+
+    public void attachColumnsToFk(final Catalog catalog) {
+        try (Transaction tx = getDbService().beginTx()) {
+            // get all columns
+            for (final Schema schema : catalog.getSchemas()) {
+                for (final Table table : catalog.getTables(schema)) {
+                    for (final ForeignKey fk : table.getImportedForeignKeys()) {
+                        //fk.
+                        //get the node of the fk
+                        dbService.findNode(DatabaseNodeType.FOREIGN_KEY, "fullName", fk.getFullName());
+                        // get the node of the table
+                        dbService.findNode(DatabaseNodeType.TABLE, "fullName", table.getFullName());
+                        // attach FK to table
+                        Relationship fkBelongsToTable = dbService.findNode(DatabaseNodeType.FOREIGN_KEY, "fullName", fk.getFullName()).createRelationshipTo(dbService.findNode(DatabaseNodeType.TABLE, "fullName", table.getFullName()), SchemaRelationShips.BELONGS_TO_TABLE);
+                        // fetch the columns of the fk
+                        for (final ForeignKeyColumnReference fkColRef : fk.getColumnReferences()) {
+                            // get the node of the column
+                            dbService.findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", fkColRef.getForeignKeyColumn().getFullName());
+                            // attach column to fk
+                            Relationship rel = dbService.findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", fkColRef.getForeignKeyColumn().getFullName()).createRelationshipTo(dbService.findNode(DatabaseNodeType.FOREIGN_KEY, "fullName", fk.getFullName()), SchemaRelationShips.IS_COLUMN_OF_FK);
+                        }
+
+                        //dbService.findNodes(DatabaseNodeType.TABLE_COLUMN, "fullName", fk.)
+                    }
+                }
+            }
+            tx.success();
         }
     }
 
@@ -259,7 +296,8 @@ public class AdditionalExecutable extends BaseStagedExecutable {
             setOutputDir(additionalConfiguration.getStringValue("outputDir", "neo4j"));
             init();
             feedTables(catalog);
-            attachFKs(catalog);
+            putFKs(catalog);
+            attachColumnsToFk(catalog);
 
             for (final Schema schema : catalog.getSchemas()) {
 //        System.out.println(schema);
