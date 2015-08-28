@@ -1,5 +1,7 @@
 # schemacrawler-plugin-neo4j [![Build Status](https://travis-ci.org/adriens/schemacrawler-plugin-neo4j.svg?branch=master)](https://travis-ci.org/adriens/schemacrawler-plugin-neo4j) [![Coverage Status](https://s3.amazonaws.com/assets.coveralls.io/badges/coveralls_3.svg)](https://coveralls.io/github/adriens/schemacrawler-plugin-neo4j?branch=master)
 
+[![Join the chat at https://gitter.im/adriens/schemacrawler-plugin-neo4j](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/adriens/schemacrawler-plugin-neo4j?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## Description
 
 This is a [schemacrawler](http://sualeh.github.io/SchemaCrawler/ "Schemacrawler Homepage") [plugin](http://sualeh.github.io/SchemaCrawler/plugins.html "Schemacrawler plugins homepage") that dumps database structure (also called schema) into a [neo4j](http://neo4j.com/ "Neo4j homepage") database. Once this done, you can view it in [neo4j web console](http://neo4j.com/developer/guide-data-visualization/#_product_keylines_neo4j_graph_visualization "Neo4j visualization"), perform [CYPHER](http://neo4j.com/developer/cypher-query-language/#_about_cypher "About CYPHER") queries on it and hence allows you to report your database schema the way you want.
