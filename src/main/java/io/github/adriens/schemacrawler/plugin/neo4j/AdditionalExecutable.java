@@ -126,7 +126,7 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                         Relationship relationship = columnNode.createRelationshipTo(tableNode, SchemaRelationShips.IS_COLUMN_OF_TABLE);
                     }
                     // end of columns
-                    for (final Index index : table.getIndices()) {
+                    for (final Index index : table.getIndexes()) {
                         Node indexNode;
                         if (index.isUnique()) {
                             indexNode = dbService.createNode(DatabaseNodeType.UNIQUE_INDEX);

@@ -45,7 +45,7 @@
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <schemacrawler.version>12.06.03</schemacrawler.version>
+        <schemacrawler.version>14.02.02</schemacrawler.version>
         <junit.version>4.11</junit.version>
         <hsqldb.version>2.3.2</hsqldb.version>
         <neo4j.version>2.3.0-M02</neo4j.version>
@@ -153,6 +153,7 @@
                 <configuration>
                     <source>7</source>
                     <target>7</target>
+                    <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
             <plugin>
