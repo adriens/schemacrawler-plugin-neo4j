@@ -24,6 +24,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -58,6 +61,7 @@ public class AdditionalExecutable extends BaseStagedExecutable {
     private String outputDir;
     private GraphDatabaseFactory dbFactory;
     private GraphDatabaseService dbService;
+    private final Connection connection = null;
 
     protected AdditionalExecutable() {
         super(COMMAND);
@@ -274,13 +278,12 @@ public class AdditionalExecutable extends BaseStagedExecutable {
     public void putSynonyms(final Catalog catalog) {
         try (Transaction tx = getDbService().beginTx()) {
             for (final Schema schema : catalog.getSchemas()) {
-                
-                for(final Synonym synonym : catalog.getSynonyms(schema)){
+
+                for (final Synonym synonym : catalog.getSynonyms(schema)) {
                     // add synonym to nodes
                     // feed node with datas
-                    
+
                     // attach synonym to schema
-                    
                     // attach synonym to database object (?)
                     //synonym.getReferencedObject().getClass();
                 }
@@ -299,13 +302,13 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                     seqNode.setProperty("fullName", sequence.getFullName());
                     seqNode.setProperty("increment", sequence.getIncrement());
                     seqNode.setProperty("lookupKey", sequence.getLookupKey());
-                    seqNode.setProperty("maximumValue", sequence.getMaximumValue()+"");
-                    seqNode.setProperty("minimumValue", sequence.getMinimumValue()+"");
+                    seqNode.setProperty("maximumValue", sequence.getMaximumValue() + "");
+                    seqNode.setProperty("minimumValue", sequence.getMinimumValue() + "");
                     seqNode.setProperty("name", sequence.getName());
-                    if(sequence.getRemarks() != null){
+                    if (sequence.getRemarks() != null) {
                         seqNode.setProperty("remarks", sequence.getRemarks());
                     }
-                    
+
                     seqNode.setProperty("isCycle", sequence.isCycle());
                     // Attach sequence to schema
                     //dbService.findNode(DatabaseNodeType.SCHEMA, "fullName", schema.getFullName());
@@ -316,9 +319,38 @@ public class AdditionalExecutable extends BaseStagedExecutable {
             tx.success();
         }
     }
-    
+
     // put routines (should fail on pgsql jdbc driver)
-    
+    public void putNbRowsOfTables(final Catalog catalog, final Connection connection) throws SQLException {
+        try (Transaction tx = getDbService().beginTx()) {
+            for (final Schema schema : catalog.getSchemas()) {
+
+                for (final Table table : catalog.getTables(schema)) {
+                    // for each table, count the number of rows
+                    String sql = "select count(1) from " + schema.getName() + ".\"" + table.getName() + "\"";
+                    Statement stmt = null;
+                    try {
+                        stmt = connection.createStatement();
+                        ResultSet rs = stmt.executeQuery(sql);
+                        while (rs.next()) {
+                            int nbRows = rs.getInt(1);
+                            //get the table node and set the number of rows in it
+                            dbService.findNode(DatabaseNodeType.TABLE, "fullName", table.getFullName()).setProperty("nbRows", nbRows);
+                        }
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    } finally {
+                        if (stmt != null) {
+                            stmt.close();
+                        }
+                    }
+
+                }
+            }
+            tx.success();
+        }
+    }
+
     @Override
     public void executeOn(final Catalog catalog, final Connection connection)
             throws Exception {
@@ -330,6 +362,7 @@ public class AdditionalExecutable extends BaseStagedExecutable {
             attachColumnsToFk(catalog);
             putSynonyms(catalog);
             putSequences(catalog);
+            putNbRowsOfTables(catalog, connection);
         }
     }
 
