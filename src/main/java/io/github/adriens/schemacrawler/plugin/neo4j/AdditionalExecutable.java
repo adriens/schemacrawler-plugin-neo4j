@@ -236,27 +236,6 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                             fkNode = dbService.createNode(DatabaseNodeType.FOREIGN_KEY);
                             fkNode.setProperty("fullName", fk.getFullName());
                         }
-                        // now, the fkNode exists but is not linked to its table columns
-                        // find the table column used by this fk
-
-                        // Add fk is it does not yest exist
-                        //getDbService().findNode(DatabaseNodeType.FOREIGN_KEY, "fullName", fk.getFullName());
-                        //TODO : attach the fk to the table it belongs to (for easier queries)
-                        /*
-                         for (final ForeignKeyColumnReference fkReference : fk.getColumnReferences()){
-                         //Node fkReferenceNode = getDbService().findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", fkReference.getForeignKeyColumn().getFullName());
-                         // make the relation
-                         // be sure that the fk attaches the good table column
-                         if(fkReference.getForeignKeyColumn().getParent().getFullName().equals(table.getFullName())){
-                         Relationship fkRelation =  getDbService().findNode(DatabaseNodeType.TABLE_COLUMN, "fullName", fkReference.getForeignKeyColumn().getFullName()).createRelationshipTo(getDbService().findNode(DatabaseNodeType.FOREIGN_KEY, "fullName", fk.getFullName()), SchemaRelationShips.IS_COLUMN_OF_FK);
-                         fkRelation.setProperty("nbItem", i);
-                         fkRelation.setProperty("fkFullName", fk.getFullName());
-                         fkRelation.setProperty("tableFullName", table.getFullName());
-                         i++;    
-                         }
-                            
-                            
-                         }*/
                     }
                 }
             }
