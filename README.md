@@ -68,7 +68,7 @@ BY THE PLUGIN !**
 
 ## Run the schemacrawler command
 
-`schemacrawler -host=localhost -port=5432 -database=sportsdb -user=sports_adm -password=user_adm  -schemas=public -c=neo4j -infolevel=maximum -server=postgresql -loglevel=CONFIG -outputDir=./neo4j`
+`schemacrawler -host=localhost -port=5432 -database=sportsdb -user=sports_adm -password=user_adm  -schemas=public -c=neo4j -infolevel=maximum -server=postgresql -loglevel=CONFIG -outputDir=./neo4j -sequences=.*`
 
 ## Start neo4j server
 
@@ -98,7 +98,7 @@ sudo cp ~/NetBeansProjects/schemacrawler-plugin-neo4j/target/schemacrawler-plugi
 
 # Maven Central Repo availability
 
-A ticket has been open to upload artifact to Sonatype (http://central.sonatype.org/), see
+A ticket has been opened to upload artifact to Sonatype (http://central.sonatype.org/), see
 https://issues.sonatype.org/browse/OSSRH-16543 for more details.
 
 # Donate
