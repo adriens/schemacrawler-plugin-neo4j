@@ -40,6 +40,7 @@ import schemacrawler.schema.Index;
 import schemacrawler.schema.IndexColumn;
 import schemacrawler.schema.PrimaryKey;
 import schemacrawler.schema.Schema;
+import schemacrawler.schema.Sequence;
 import schemacrawler.schema.Synonym;
 import schemacrawler.schema.Table;
 import schemacrawler.tools.executable.BaseStagedExecutable;
@@ -75,10 +76,10 @@ public class AdditionalExecutable extends BaseStagedExecutable {
         try (Transaction tx = getDbService().beginTx()) {
             for (final Schema schema : catalog.getSchemas()) {
                 Node schemaNode = dbService.createNode(DatabaseNodeType.SCHEMA);
-                schemaNode.setProperty("Name", schema.getName());
-                schemaNode.setProperty("FullName", schema.getFullName());
-                schemaNode.setProperty("LookupKey", schema.getLookupKey());
-                schemaNode.setProperty("Remarks", schema.getRemarks());
+                schemaNode.setProperty("name", schema.getName());
+                schemaNode.setProperty("fullName", schema.getFullName());
+                schemaNode.setProperty("lookupKey", schema.getLookupKey());
+                schemaNode.setProperty("remarks", schema.getRemarks());
 
                 // we have the schema node
                 // for each table, attach the table to the schema without
@@ -311,6 +312,32 @@ public class AdditionalExecutable extends BaseStagedExecutable {
     }
 
     // put sequences
+    public void putSequences(final Catalog catalog) {
+        try (Transaction tx = getDbService().beginTx()) {
+            for (final Schema schema : catalog.getSchemas()) {
+
+                for (final Sequence sequence : catalog.getSequences(schema)) {
+                    Node seqNode = dbService.createNode(DatabaseNodeType.SEQUENCE);
+                    seqNode.setProperty("fullName", sequence.getFullName());
+                    seqNode.setProperty("increment", sequence.getIncrement());
+                    seqNode.setProperty("lookupKey", sequence.getLookupKey());
+                    seqNode.setProperty("maximumValue", sequence.getMaximumValue()+"");
+                    seqNode.setProperty("minimumValue", sequence.getMinimumValue()+"");
+                    seqNode.setProperty("name", sequence.getName());
+                    if(sequence.getRemarks() != null){
+                        seqNode.setProperty("remarks", sequence.getRemarks());
+                    }
+                    
+                    seqNode.setProperty("isCycle", sequence.isCycle());
+                    // Attach sequence to schema
+                    //dbService.findNode(DatabaseNodeType.SCHEMA, "fullName", schema.getFullName());
+                    Relationship belongsToSchema = seqNode.createRelationshipTo(dbService.findNode(DatabaseNodeType.SCHEMA, "fullName", schema.getFullName()), SchemaRelationShips.BELONGS_TO_SCHEMA);
+                    // attach the sequence to a column (if applicable)
+                }
+            }
+            tx.success();
+        }
+    }
     
     // put routines (should fail on pgsql jdbc driver)
     
@@ -324,6 +351,7 @@ public class AdditionalExecutable extends BaseStagedExecutable {
             putFKs(catalog);
             attachColumnsToFk(catalog);
             putSynonyms(catalog);
+            putSequences(catalog);
         }
     }
 
