@@ -94,7 +94,6 @@ public class AdditionalExecutable extends BaseStagedExecutable {
                     tableNode.setProperty("schemaName", table.getSchema().getName());
                     tableNode.setProperty("fullName", table.getFullName());
                     tableNode.setProperty("tableType", table.getTableType().toString());
-                    table.getDefinition();
 
                     // attach the table to its schema
                     Relationship schemaRelationShip = tableNode.createRelationshipTo(schemaNode, SchemaRelationShips.BELONGS_TO_SCHEMA);
