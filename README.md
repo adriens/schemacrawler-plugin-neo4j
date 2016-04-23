@@ -1,6 +1,7 @@
-# schemacrawler-plugin-neo4j [![Build Status](https://travis-ci.org/adriens/schemacrawler-plugin-neo4j.svg?branch=master)](https://travis-ci.org/adriens/schemacrawler-plugin-neo4j) [![Coverage Status](https://s3.amazonaws.com/assets.coveralls.io/badges/coveralls_3.svg)](https://coveralls.io/github/adriens/schemacrawler-plugin-neo4j?branch=master)
+[![Build Status](https://travis-ci.org/adriens/schemacrawler-plugin-neo4j.svg?branch=master)](https://travis-ci.org/adriens/schemacrawler-plugin-neo4j) [![Coverage Status](https://s3.amazonaws.com/assets.coveralls.io/badges/coveralls_3.svg)](https://coveralls.io/github/adriens/schemacrawler-plugin-neo4j?branch=master) [![Dependency Status](https://www.versioneye.com/user/projects/571ac91cfcd19a0039f17ee8/badge.svg?style=flat)](https://www.versioneye.com/user/projects/571ac91cfcd19a0039f17ee8) [![Join the chat at https://gitter.im/adriens/schemacrawler-plugin-neo4j](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/adriens/schemacrawler-plugin-neo4j?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Join the chat at https://gitter.im/adriens/schemacrawler-plugin-neo4j](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/adriens/schemacrawler-plugin-neo4j?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+# schemacrawler-plugin-neo4j
 
 ## Description
 
