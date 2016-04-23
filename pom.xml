@@ -50,14 +50,14 @@
         <hsqldb.version>2.3.3</hsqldb.version>
         <neo4j.version>2.3.3</neo4j.version>
         <commons-io.version>2.4</commons-io.version>
-        <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
-        <maven-shade-plugin.version>2.4</maven-shade-plugin.version>
+        <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
+        <maven-shade-plugin.version>2.4.3</maven-shade-plugin.version>
         
         <!-- Maven reporting plugin versions -->
         <maven-source-plugin.version>3.0.0</maven-source-plugin.version>
         <maven-site-plugin.version>3.5.1</maven-site-plugin.version>
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>        
-        <maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
+        <jxr-maven-plugin.version>2.5</jxr-maven-plugin.version>
         <maven-surefire-report-plugin.version>2.18.1</maven-surefire-report-plugin.version>
         <maven-project-info-reports-plugin.version>2.9</maven-project-info-reports-plugin.version>
         <maven-changes-plugin.version>2.12</maven-changes-plugin.version>
@@ -187,7 +187,7 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-jxr-plugin</artifactId>
-                            <version>${maven-jxr-plugin.version}</version>
+                            <version>${jxr-maven-plugin.version}</version>
                             <configuration>
                                 <aggregate>true</aggregate>
                             </configuration>
@@ -336,7 +336,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>${maven-project-info-reports-plugin.version.version}</version>
+                <version>${maven-project-info-reports-plugin.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -361,7 +361,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.8</version>
+                <version>2.9</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
