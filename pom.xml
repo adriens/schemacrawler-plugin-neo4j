@@ -48,7 +48,7 @@
         <schemacrawler.version>14.07.08</schemacrawler.version>
         <junit.version>4.12</junit.version>
         <hsqldb.version>2.3.3</hsqldb.version>
-        <neo4j.version>2.3.0-M02</neo4j.version>
+        <neo4j.version>2.3.3</neo4j.version>
         <commons-io.version>2.4</commons-io.version>
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
         <maven-shade-plugin.version>2.4</maven-shade-plugin.version>
