@@ -73,7 +73,7 @@ public class AdditionalExecutable extends BaseStagedExecutable {
         FileUtils.deleteDirectory(new File(getOutputDir()));
         System.out.println("Output directory cleaned");
         setDbFactory(new GraphDatabaseFactory());
-        setDbService(dbFactory.newEmbeddedDatabase(getOutputDir()));
+        setDbService(dbFactory.newEmbeddedDatabase(new File(getOutputDir())));
     }
 
     public void feedTables(final Catalog catalog) {
