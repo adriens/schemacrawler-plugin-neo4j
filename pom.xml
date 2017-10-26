@@ -65,7 +65,8 @@
         <maven-clover2-plugin.version>4.0.6</maven-clover2-plugin.version>
         <changelog-maven-plugin.version>2.3</changelog-maven-plugin.version>
         <taglist-maven-plugin.version>2.4</taglist-maven-plugin.version>
-
+        <coveralls-maven-plugin.version>4.3.0</coveralls-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -249,7 +250,7 @@
             </plugin>
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
-                <artifactId>coveralls-maven-plugin</artifactId>
+                <artifactId>${coveralls-maven-plugin.version}</artifactId>
                 <version>4.1.0</version>
                 <configuration>
                     <repoToken>UIWoFmL3gX4i9F6HqBd8N6kGfTqW5unth</repoToken>
@@ -259,7 +260,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.7.6.201602180812</version>
+                <version>${jacoco-maven-plugin.version}</version>
                 <configuration>
                     <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
                     <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
