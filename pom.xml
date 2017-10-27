@@ -48,7 +48,7 @@
         <schemacrawler.version>14.16.04</schemacrawler.version>
         <junit.version>4.12</junit.version>
         <hsqldb.version>2.4.0</hsqldb.version>
-        <neo4j.version>3.2.6</neo4j.version>
+        <neo4j.version>3.3.0</neo4j.version>
         <commons-io.version>2.5</commons-io.version>
         <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
         <maven-shade-plugin.version>3.1.0</maven-shade-plugin.version>
@@ -114,7 +114,16 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>${maven-shade-plugin.version}</version>
                 <configuration>
-                    <!-- put your configurations here -->
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <!--<exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>-->
+                            </excludes>
+                        </filter>
+                    </filters>
                 </configuration>
                 <executions>
                     <execution>
