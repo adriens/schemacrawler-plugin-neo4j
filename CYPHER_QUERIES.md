@@ -22,7 +22,7 @@ This cyper query returns the table that are linked as well as
 
 ```
 MATCH (u:TABLE)<-[i:IS_COLUMN_OF_TABLE]-(c:TABLE_COLUMN)<-[r:REFERENCES]-(n:FOREIGN_KEY)-[b:BELONGS_TO_TABLE]->(t:TABLE)
-create (t)-[f:REFERENCES]->(u)
+merge (t)-[f:REFERENCES]->(u)
 return t,u,f
 ```
 
