@@ -40,4 +40,14 @@ Tables that are not referenced by other tables :
 MATCH (a:TABLE) where not ((a)-[:REFERENCES]->(:TABLE)) return a;
 ```
 
+## Tables with PK
 
+```
+MATCH (n:PRIMARY_KEY)-[r:PK_OF_COLUMN]->(c:TABLE_COLUMN)-[:IS_COLUMN_OF_TABLE]-(t:TABLE) RETURN t
+```
+
+## Links between tables and PKs
+
+```
+MATCH (n:PRIMARY_KEY)-[r:PK_OF_COLUMN]->(c:TABLE_COLUMN)-[:IS_COLUMN_OF_TABLE]-(t:TABLE) RETURN n,r,c,t LIMIT 25
+```
