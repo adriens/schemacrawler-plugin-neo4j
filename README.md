@@ -48,7 +48,7 @@ To create your neo4j database for your database schema, you need :
 * A proper schemacrawler install
 * A database with a schema you want to analyze (and if possible a nice one).
 I personally did use the sportsdb database sample (http://www.sportsdb.org/sd/samples)
-* Test a schemacrawler `graph` generation
+* Test a schemacrawler graph generation
 * drop the jar you've built in `$SCHEMACARWLER_HOME/lib`
 
 ## Neo4j requirements
@@ -57,7 +57,7 @@ Follow neo4j [install instructions](http://neo4j.com/docs/stable/server-installa
 In the following sections, i will assume you are runnning neo4j on linux as it's
 easier to document, but things are exactly the same.
 
-Choose an **empty and dedicated* directoty that will contain the generated
+Choose an **empty and dedicated* directory that will contain the generated
 database : BEWARE AS DURING DATABASE CREATION THIS DIRECTORY WILL BE DELETED
 BY THE PLUGIN !**
 
@@ -71,7 +71,7 @@ BY THE PLUGIN !**
 
 ## Start neo4j server
 
-`cd ~/apps/neo4j-community-2.3.0-M02 && ./bin/neo4j start`
+`cd ~/apps/neo4j-community-3.2.6 && ./bin/neo4j start`
 
 ## Browse the database
 
@@ -84,21 +84,16 @@ database schema
 
 ##  Start neo4j server :
 
-`cd ~/apps/neo4j-community-2.3.0-M02 && ./bin/neo4j start`
+`cd ~/apps/neo4j-community-3.2.6 && ./bin/neo4j start`
 
 ## Stop neo4j server and make some cleanup :
 
-`cd ~/apps/neo4j-community-2.3.0-M02 && ./bin/neo4j stop && rm -rf ~/neo4j`
+`cd ~/apps/neo4j-community-3.2.6 && ./bin/neo4j stop && rm -rf ~/neo4j`
 
 ## Run schemacrawler
 
 `cd ~/tmp
 sudo cp ~/NetBeansProjects/schemacrawler-plugin-neo4j/target/schemacrawler-plugin-neo4j-1.0-SNAPSHOT.jar /opt/schemacrawler/lib/ && schemacrawler -host=localhost -port=5432 -database=sportsdb -user=sports_adm -password=user_adm  -schemas=public -c=neo4j -infolevel=maximum -server=postgresql -loglevel=CONFIG -outputDir=./neo4j`
-
-# Maven Central Repo availability
-
-A ticket has been opened to upload artifact to Sonatype (http://central.sonatype.org/), see
-https://issues.sonatype.org/browse/OSSRH-16543 for more details.
 
 # Donate
 
@@ -110,6 +105,7 @@ So, *if you like this software*, please :
 1. Simply star the project on github
 2. Ask to connect with me on my [my linkedin profile](https://www.linkedin.com/profile/view?id=253709684 "my linkedin profile")
 3. Write some recommandation
+4. Donate some code through a PR
 
 
 # Acknowledgements
