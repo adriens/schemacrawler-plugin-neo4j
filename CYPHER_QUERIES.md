@@ -31,3 +31,13 @@ In the neo4j browser you get the following graph :
 ![GitHub Logo](src/site/resources/img/relations-between-tables.jpg)
 
 ![GitHub Logo](src/site/resources/img/relations-between-tables-2.jpg)
+
+## Orphan tables
+
+Tables that are not referenced by other tables :
+
+```
+MATCH (a:TABLE) where not ((a)-[:REFERENCES]->(:TABLE)) return a;
+```
+
+
